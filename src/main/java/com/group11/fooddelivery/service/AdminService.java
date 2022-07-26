@@ -1,4 +1,4 @@
 package com.group11.fooddelivery.service;
 
-public class UserService {
+public class AdminService {
 }
