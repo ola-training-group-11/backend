@@ -2,78 +2,63 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.2</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
 	<groupId>com.group11</groupId>
 	<artifactId>fooddelivery</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>fooddelivery</name>
+	<name>foodDelivery</name>
 	<description>Food delivery app</description>
+
 	<properties>
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
 
+	<!--- Spring boot parent Tag-->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.1</version>
+	</parent>
+
 	<dependencies>
-		<!--        Things we need for services, applications-->
+
+		<!--- Spring boot starter web-->
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>2.7.1</version>
 		</dependency>
 
-		<!--        For mysql data-->
+
+		<!--- Allow to connect with database and perform crud operation-->
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 			<version>2.7.1</version>
 		</dependency>
 
-		<!--        Connector to connect springboot and mysql-->
+		<!-- Mysql Connector -->
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.29</version>
 		</dependency>
 
-		<!--        JPA provides higher level of abstraction than the connector. But JPA needs connector-->
-		<!--        Hibernate is a JPA tool. It implements the specification for the JPA-->
-
-		<!--        For salt pepper security or for password encryption.-->
+		<!--For Encryption -->
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 			<version>2.7.1</version>
 		</dependency>
 
-		<!--        For getters and setters-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.24</version>
-			<scope>provided</scope>
 		</dependency>
+
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
 </project>
