@@ -4,10 +4,8 @@ import com.group11.fooddelivery.model.User;
 import com.group11.fooddelivery.model.request.EditProfileRequest;
 import com.group11.fooddelivery.model.request.GetProfileRequest;
 import com.group11.fooddelivery.model.request.LoginRequest;
-import com.group11.fooddelivery.model.response.EditProfileResponse;
-import com.group11.fooddelivery.model.response.GetProfileResponse;
-import com.group11.fooddelivery.model.response.LoginResponse;
-import com.group11.fooddelivery.model.response.SignUpResponse;
+import com.group11.fooddelivery.model.request.SignOutRequest;
+import com.group11.fooddelivery.model.response.*;
 import com.group11.fooddelivery.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,5 +42,11 @@ public class CommonController {
     public ResponseEntity<EditProfileResponse> editProfile(@RequestBody EditProfileRequest editProfileRequest) {
         EditProfileResponse editProfileResponse = commonService.editProfile(editProfileRequest);
         return new ResponseEntity<>(editProfileResponse, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/logOut",consumes = "application/json",produces = "application/json")
+    public ResponseEntity<SignOutResponse>logout(@RequestBody SignOutRequest signOutRequest){
+        SignOutResponse signOutResponse= commonService.logout(signOutRequest);
+        return new ResponseEntity<>(signOutResponse,HttpStatus.OK);
     }
 }
