@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -34,7 +35,7 @@ public class CommonController {
         return new ResponseEntity<>(signUpResponse, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/getProfile", consumes = "application/json", produces = "application/json")
+    @GetMapping(value = "/getProfile", consumes = "application/json", produces = "application/json")
     public ResponseEntity<GetProfileResponse> getProfile(@RequestBody GetProfileRequest getProfileRequest) {
         GetProfileResponse getProfileResponse = commonService.getProfile(getProfileRequest);
         return new ResponseEntity<>(getProfileResponse, HttpStatus.OK);
