@@ -1,8 +1,8 @@
 package com.group11.fooddelivery.model;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.NonNull;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,16 +13,15 @@ import javax.persistence.Table;
 @Getter
 @Setter
 public class User {
-
+    @NonNull
     @Id
-    private long userId;
+    private String email;
     @NonNull
     private String name;
-    @NonNull
-    private String email;
     @NonNull
     private String password;
     private String role;
     private String salt;
     private String token;
+    private boolean isActive; //if false, then user is banned.
 }
