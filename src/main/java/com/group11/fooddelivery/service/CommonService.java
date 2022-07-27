@@ -3,9 +3,12 @@ package com.group11.fooddelivery.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.group11.fooddelivery.configure.Constants;
 import com.group11.fooddelivery.model.User;
+import com.group11.fooddelivery.model.request.EditProfileRequest;
 import com.group11.fooddelivery.model.request.GetProfileRequest;
 import com.group11.fooddelivery.model.request.LoginRequest;
+import com.group11.fooddelivery.model.response.EditProfileResponse;
 import com.group11.fooddelivery.model.response.GetProfileResponse;
 import com.group11.fooddelivery.model.response.LoginResponse;
 import com.group11.fooddelivery.model.response.SignUpResponse;
@@ -74,5 +77,24 @@ public class CommonService {
         }
         getProfileResponse.setProfile(json);
         return getProfileResponse;
+    }
+
+    public EditProfileResponse editProfile(EditProfileRequest editProfileRequest) {
+        EditProfileResponse editProfileResponse = new EditProfileResponse();
+        User user = userRepository.findByEmail(editProfileRequest.getEmail());
+        if (Constants.name.equals(editProfileRequest.getField())) {
+            //Change name
+            user.setName(editProfileRequest.getNewValue());
+        } else if (Constants.password.equals(editProfileRequest.getField())) {
+            //Change password
+            user.setPassword(editProfileRequest.getNewValue());
+        }
+        userRepository.save(user);
+        editProfileResponse.setSuccess(true);
+        editProfileResponse.setMessage(editProfileRequest.getField() + " updated successfully.");
+        editProfileResponse.setEmail(editProfileRequest.getEmail());
+        editProfileResponse.setField(editProfileRequest.getField());
+        editProfileResponse.setNewValue(editProfileRequest.getNewValue());
+        return editProfileResponse;
     }
 }
