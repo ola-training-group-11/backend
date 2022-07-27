@@ -1,8 +1,10 @@
 package com.group11.fooddelivery.controller;
 
 import com.group11.fooddelivery.model.User;
+import com.group11.fooddelivery.model.request.EditProfileRequest;
 import com.group11.fooddelivery.model.request.GetProfileRequest;
 import com.group11.fooddelivery.model.request.LoginRequest;
+import com.group11.fooddelivery.model.response.EditProfileResponse;
 import com.group11.fooddelivery.model.response.GetProfileResponse;
 import com.group11.fooddelivery.model.response.LoginResponse;
 import com.group11.fooddelivery.model.response.SignUpResponse;
@@ -36,5 +38,11 @@ public class CommonController {
     public ResponseEntity<GetProfileResponse> getProfile(@RequestBody GetProfileRequest getProfileRequest) {
         GetProfileResponse getProfileResponse = commonService.getProfile(getProfileRequest);
         return new ResponseEntity<>(getProfileResponse, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/editProfile", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<EditProfileResponse> getProfile(@RequestBody EditProfileRequest editProfileRequest) {
+        EditProfileResponse editProfileResponse = commonService.editProfile(editProfileRequest);
+        return new ResponseEntity<>(editProfileResponse, HttpStatus.OK);
     }
 }
