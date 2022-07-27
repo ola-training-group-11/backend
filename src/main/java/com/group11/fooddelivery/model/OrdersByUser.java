@@ -9,10 +9,10 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "OrdersByUsers")
+@Table(name = "OrdersByUser")
 @Getter
 @Setter
-public class OrdersByUsers {
+public class OrdersByUser {
     @Id
     private String orderId;
     private String email;

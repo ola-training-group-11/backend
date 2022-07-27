@@ -9,7 +9,7 @@ import lombok.Setter;
 public class LoginRequest extends Request{
 
     @NonNull
-    private String userName;
+    private String email;
     @NonNull
     private String password;
 }

@@ -13,7 +13,6 @@ import javax.persistence.Table;
 @Getter
 @Setter
 public class User {
-    @NonNull
     @Id
     private String email;
     @NonNull
