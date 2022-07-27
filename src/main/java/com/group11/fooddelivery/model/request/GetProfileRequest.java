@@ -5,5 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Request {
+public class GetProfileRequest extends Request{
+    private String email;
 }

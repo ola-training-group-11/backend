@@ -7,6 +7,7 @@ import com.group11.fooddelivery.model.response.AdminResponse;
 import com.group11.fooddelivery.repository.OrderRepository;
 import com.group11.fooddelivery.repository.RestaurantRepository;
 import com.group11.fooddelivery.repository.UserRepository;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,8 @@ public class AdminService {
     @Autowired
     OrderRepository orderRepository;
 
-    public AdminResponse getUsers(String field){
-        List<User> users = userRepository.findAll(Sort.by(Sort.Direction.ASC,field));
+    public AdminResponse getUsers(){
+        List<User> users = userRepository.findAll();
         AdminResponse adminResponse = new AdminResponse();
         if(users == null){
             adminResponse.setUsers(null);
@@ -37,8 +38,8 @@ public class AdminService {
         return adminResponse;
     }
 
-    public AdminResponse getRestaurants(String field){
-        List<Restaurant> restaurants = restaurantRepository.findAll(Sort.by(Sort.Direction.ASC,field));
+    public AdminResponse getRestaurants(){
+        List<Restaurant> restaurants = restaurantRepository.findAll();
         AdminResponse adminResponse =  new AdminResponse();
         if(restaurants == null){
             adminResponse.setRestaurants(null);
@@ -52,8 +53,8 @@ public class AdminService {
         return adminResponse;
     }
 
-    public AdminResponse getOrders(String field){
-        List<Order> orders = orderRepository.findAll(Sort.by(Sort.Direction.ASC,field));
+    public AdminResponse getOrders(){
+        List<Order> orders = orderRepository.findAll();
         AdminResponse adminResponse =  new AdminResponse();
         if(orders == null){
             adminResponse.setOrders(null);
@@ -67,7 +68,7 @@ public class AdminService {
      return adminResponse;
     }
 
-    public AdminResponse banRestaurant(Long restaurantId){
+    public AdminResponse banRestaurant(long restaurantId){
         Restaurant currentRestaurant = restaurantRepository.getById(restaurantId);
         AdminResponse adminResponse =  new AdminResponse();
         if (currentRestaurant == null){
@@ -77,6 +78,7 @@ public class AdminService {
             adminResponse.setSuccess(false);
             adminResponse.setMessage("Restaurant is already banned!!");
         }else {
+
             restaurantRepository.delete(currentRestaurant);
             currentRestaurant.setActive(false);
             restaurantRepository.save(currentRestaurant);
@@ -87,8 +89,8 @@ public class AdminService {
         return adminResponse;
     }
 
-    public AdminResponse banUser(Long userId){
-        User currentUser = userRepository.getById(userId);
+    public AdminResponse banUser(String email){
+        User currentUser = userRepository.findByEmail(email);
         AdminResponse adminResponse =  new AdminResponse();
         if (currentUser == null){
             adminResponse.setSuccess(false);

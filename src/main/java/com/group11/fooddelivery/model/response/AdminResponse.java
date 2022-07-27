@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 public class AdminResponse extends Response{
-    List<User> users;
-    List<Restaurant> restaurants;
-    List<Order> orders;
+   private List<User> users;
+   private List<Restaurant> restaurants;
+   private List<Order> orders;
 }
