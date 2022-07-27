@@ -1,4 +1,7 @@
 package com.group11.fooddelivery.repository;
 
-public class ItemRepository {
+import com.group11.fooddelivery.model.Item;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ItemRepository extends JpaRepository<Item, Long> {
 }
