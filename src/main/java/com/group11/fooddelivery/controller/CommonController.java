@@ -24,13 +24,12 @@ public class CommonController {
 
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        System.out.println(loginRequest.getUserName());
         LoginResponse loginResponse = commonService.authenticate(loginRequest);
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 
     @PostMapping(value = "/signup", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<SignUpResponse> signUp(@RequestBody User user) {
+    public ResponseEntity<SignUpResponse> signup(@RequestBody User user) {
         SignUpResponse signUpResponse = commonService.register(user);
         return new ResponseEntity<>(signUpResponse, HttpStatus.OK);
     }
@@ -42,7 +41,7 @@ public class CommonController {
     }
 
     @PostMapping(value = "/editProfile", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<EditProfileResponse> getProfile(@RequestBody EditProfileRequest editProfileRequest) {
+    public ResponseEntity<EditProfileResponse> editProfile(@RequestBody EditProfileRequest editProfileRequest) {
         EditProfileResponse editProfileResponse = commonService.editProfile(editProfileRequest);
         return new ResponseEntity<>(editProfileResponse, HttpStatus.OK);
     }
