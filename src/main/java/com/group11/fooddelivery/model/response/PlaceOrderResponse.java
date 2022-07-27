@@ -1,14 +1,16 @@
 package com.group11.fooddelivery.model.response;
 
+import com.group11.fooddelivery.model.PlaceOrderResponseItems;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
-public class PlaceOrderResponse extends Response{
+@Getter
+@Setter
+public class PlaceOrderResponse extends Response {
+    private String orderId;
     private String restaurantName;
-    private List<itemDetail> selectedItems;
+    private List<PlaceOrderResponseItems> selectedItems;
     private int totalPrice;
-
-    static class itemDetail {
-        private Long itemId;
-        private int quantity;
-    }
 }
