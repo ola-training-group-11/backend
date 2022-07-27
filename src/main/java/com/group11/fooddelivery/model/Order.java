@@ -6,7 +6,6 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.UUID;
 
 
 @Entity
@@ -15,8 +14,8 @@ import java.util.UUID;
 @Setter
 public class Order {
     @Id
-    private String orderId = UUID.randomUUID().toString();
+    private String orderId;
     private long restaurantId;
-    private String itemId;
-    private String quantity;
+    private long itemId;
+    private int quantity;
 }
