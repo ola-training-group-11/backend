@@ -25,7 +25,7 @@ public class CommonService {
     String pepper = "SomethingIsHappening";
 
     public LoginResponse authenticate(LoginRequest loginRequest) {
-        User presentUser = userRepository.findByEmail(loginRequest.getUserName());
+        User presentUser = userRepository.findByEmail(loginRequest.getEmail());
         LoginResponse loginResponse = new LoginResponse();
         if (presentUser == null) {
             loginResponse.setSuccess(false);
@@ -76,6 +76,8 @@ public class CommonService {
             e.printStackTrace();
         }
         getProfileResponse.setProfile(json);
+        getProfileResponse.setSuccess(true);
+        getProfileResponse.setMessage("User found!");
         return getProfileResponse;
     }
 
