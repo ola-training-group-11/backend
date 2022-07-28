@@ -8,5 +8,6 @@ import lombok.Setter;
 public class EditProfileResponse extends Response{
     private String email;
     private String field;
+    private String oldValue;
     private String newValue;
 }
