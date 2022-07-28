@@ -4,14 +4,12 @@ import com.group11.fooddelivery.model.request.LatLongRequest;
 import com.group11.fooddelivery.model.request.PlaceOrderRequest;
 import com.group11.fooddelivery.model.response.LatLongResponse;
 import com.group11.fooddelivery.model.response.PlaceOrderResponse;
+import com.group11.fooddelivery.model.response.TrackResponse;
 import com.group11.fooddelivery.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CustomerController {
@@ -29,5 +27,10 @@ public class CustomerController {
         LatLongResponse latLongResponse=customerService.getRestaurant(latLongRequest);
         return new ResponseEntity<>(latLongResponse,HttpStatus.OK);
 
+    }
+    @GetMapping(value = "/trackOrder",produces = "application/json")
+    public ResponseEntity<TrackResponse>trackOrder(@RequestParam String OrderId){
+        TrackResponse trackResponse= customerService.track(OrderId);
+        return new ResponseEntity<>(trackResponse,HttpStatus.OK);
     }
 }

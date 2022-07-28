@@ -10,6 +10,7 @@ import com.group11.fooddelivery.model.request.LatLongRequest;
 import com.group11.fooddelivery.model.request.PlaceOrderRequest;
 import com.group11.fooddelivery.model.response.LatLongResponse;
 import com.group11.fooddelivery.model.response.PlaceOrderResponse;
+import com.group11.fooddelivery.model.response.TrackResponse;
 import com.group11.fooddelivery.repository.OrdersByUsersRepository;
 import com.group11.fooddelivery.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.group11.fooddelivery.configure.Constants.*;
 
 @Service
 public class CustomerService {
@@ -54,7 +57,7 @@ public class CustomerService {
         OrdersByUser ordersByUser = new OrdersByUser();
         ordersByUser.setOrderId(orderId);
         ordersByUser.setEmail(placeOrderRequest.getEmail());
-        ordersByUser.setStatus(Constants.orderPlaced);
+        ordersByUser.setStatus(orderPlaced);
         ordersByUsersRepository.save(ordersByUser);
 
         //Populate orders_info table
@@ -104,5 +107,32 @@ public class CustomerService {
         latLongResponse.setMessage("Please find your nearest restaurants!");
         return latLongResponse;
 
+    }
+    public TrackResponse track(String OrderId) {
+        OrdersByUser ordersByUser=ordersByUsersRepository.findByOrderId(OrderId);
+        TrackResponse trackResponse=new TrackResponse();
+        if(ordersByUser==null){
+            trackResponse.setSuccess(false);
+            trackResponse.setMessage("No order is placed !");
+        }
+
+        else if(ordersByUser.getStatus().equals(orderPlaced)){
+            trackResponse.setSuccess(true);
+            trackResponse.setMessage("Ordered is placed will be delivered soon");
+        }
+        else if(ordersByUser.getStatus().equals(orderInTransit)){
+            trackResponse.setSuccess(true);
+            trackResponse.setMessage("Ordered is on the way will be delivered soon");
+        }
+        else if(ordersByUser.getStatus().equals(orderDelivered)){
+            trackResponse.setSuccess(true);
+            trackResponse.setMessage("Ordered is Delivered");
+        }
+        else
+        {
+            trackResponse.setSuccess(false);
+            trackResponse.setMessage("Something went wrong");
+        }
+        return trackResponse;
     }
 }
