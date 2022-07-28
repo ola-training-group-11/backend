@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 @Setter
 public class PlaceOrderRequest extends Request {
-    private String email;
     private Long restaurantId;
     private List<PlaceOrderRequestItems> selectedItems;
 }

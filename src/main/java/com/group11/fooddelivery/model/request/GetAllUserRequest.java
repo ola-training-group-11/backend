@@ -5,5 +5,5 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GetAllRestaurantsRequest extends Request{
+public class GetAllUserRequest extends Request{
 }

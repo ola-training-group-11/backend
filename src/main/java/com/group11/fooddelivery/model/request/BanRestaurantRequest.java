@@ -1,4 +1,10 @@
 package com.group11.fooddelivery.model.request;
 
-public class BanRestaurantRequest {
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class BanRestaurantRequest extends Request{
+    private Long restaurantId;
 }

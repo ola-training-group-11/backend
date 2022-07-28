@@ -6,7 +6,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class LatLongRequest extends Request {
-    private String email;
     private double latitude;
     private double longitude;
 }
