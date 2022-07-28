@@ -4,6 +4,7 @@ import com.group11.fooddelivery.clients.AuthenticationClient;
 import com.group11.fooddelivery.model.Order;
 import com.group11.fooddelivery.model.Restaurant;
 import com.group11.fooddelivery.model.User;
+import com.group11.fooddelivery.model.request.*;
 import com.group11.fooddelivery.model.response.AdminResponse;
 import com.group11.fooddelivery.repository.OrderRepository;
 import com.group11.fooddelivery.repository.RestaurantRepository;
@@ -24,17 +25,17 @@ public class AdminService {
     @Autowired
     AuthenticationClient authenticationClient;
 
-    public AdminResponse getUsers(){
-        List<User> users = userRepository.findAll();
+    public AdminResponse getUsers(GetAllUserRequest getAllUserRequest){
         AdminResponse adminResponse = new AdminResponse();
 
         //Verify session token.
-        if (!authenticationClient.verifyToken(getProfileRequest, getProfileRequest.getEmail())) {
-            getProfileResponse.setSuccess(false);
-            getProfileResponse.setMessage("User session expired.");
-            return getProfileResponse;
+        if (!authenticationClient.verifyToken(getAllUserRequest)) {
+            adminResponse.setSuccess(false);
+            adminResponse.setMessage("User session expired.");
+            return adminResponse;
         }
 
+        List<User> users = userRepository.findAll();
         if(users == null){
             adminResponse.setUsers(null);
             adminResponse.setSuccess(false);
@@ -47,9 +48,17 @@ public class AdminService {
         return adminResponse;
     }
 
-    public AdminResponse getAllRestaurants(){
-        List<Restaurant> restaurants = restaurantRepository.findAll();
+    public AdminResponse getAllRestaurants(GetAllRestaurantsRequest getAllRestaurantsRequest){
         AdminResponse adminResponse =  new AdminResponse();
+
+        //Verify session token.
+        if (!authenticationClient.verifyToken(getAllRestaurantsRequest)) {
+            adminResponse.setSuccess(false);
+            adminResponse.setMessage("User session expired.");
+            return adminResponse;
+        }
+
+        List<Restaurant> restaurants = restaurantRepository.findAll();
         if(restaurants == null){
             adminResponse.setRestaurants(null);
             adminResponse.setSuccess(false);
@@ -62,9 +71,17 @@ public class AdminService {
         return adminResponse;
     }
 
-    public AdminResponse getOrders(){
-        List<Order> orders = orderRepository.findAll();
+    public AdminResponse getOrders(GetOrdersRequest getOrdersRequest){
         AdminResponse adminResponse =  new AdminResponse();
+
+        //Verify session token.
+        if (!authenticationClient.verifyToken(getOrdersRequest)) {
+            adminResponse.setSuccess(false);
+            adminResponse.setMessage("User session expired.");
+            return adminResponse;
+        }
+
+        List<Order> orders = orderRepository.findAll();
         if(orders == null){
             adminResponse.setOrders(null);
             adminResponse.setSuccess(false);
@@ -77,9 +94,17 @@ public class AdminService {
      return adminResponse;
     }
 
-    public AdminResponse banRestaurant(long restaurantId){
-        Restaurant currentRestaurant = restaurantRepository.findByrestaurantId(restaurantId);
+    public AdminResponse banRestaurant(BanRestaurantRequest banRestaurantRequest){
         AdminResponse adminResponse =  new AdminResponse();
+
+        //Verify session token.
+        if (!authenticationClient.verifyToken(banRestaurantRequest)) {
+            adminResponse.setSuccess(false);
+            adminResponse.setMessage("User session expired.");
+            return adminResponse;
+        }
+
+        Restaurant currentRestaurant = restaurantRepository.findByrestaurantId(banRestaurantRequest.getRestaurantId());
         if (currentRestaurant == null){
             adminResponse.setSuccess(false);
             adminResponse.setMessage("Restaurant Doesn't exist!!!");
@@ -98,9 +123,17 @@ public class AdminService {
         return adminResponse;
     }
 
-    public AdminResponse banUser(String email){
-        User currentUser = userRepository.findByEmail(email);
+    public AdminResponse banUser(BanUserRequest banUserRequest){
         AdminResponse adminResponse =  new AdminResponse();
+
+        //Verify session token.
+        if (!authenticationClient.verifyToken(banUserRequest)) {
+            adminResponse.setSuccess(false);
+            adminResponse.setMessage("User session expired.");
+            return adminResponse;
+        }
+
+        User currentUser = userRepository.findByEmail(banUserRequest.getUserEmail());
         if (currentUser == null){
             adminResponse.setSuccess(false);
             adminResponse.setMessage("User Doesn't exist!!!");

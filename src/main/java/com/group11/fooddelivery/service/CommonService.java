@@ -26,6 +26,7 @@ public class CommonService {
     AuthenticationClient authenticationClient;
 
     String pepper = "SomethingIsHappening";
+
     public LoginResponse authenticate(LoginRequest loginRequest) {
         User presentUser = userRepository.findByEmail(loginRequest.getEmail());
         LoginResponse loginResponse = new LoginResponse();
@@ -78,7 +79,7 @@ public class CommonService {
         GetProfileResponse getProfileResponse = new GetProfileResponse();
 
         //Verify session token.
-        if (!authenticationClient.verifyToken(getProfileRequest, getProfileRequest.getEmail())) {
+        if (!authenticationClient.verifyToken(getProfileRequest)) {
             getProfileResponse.setSuccess(false);
             getProfileResponse.setMessage("User session expired.");
             return getProfileResponse;
@@ -103,7 +104,7 @@ public class CommonService {
         EditProfileResponse editProfileResponse = new EditProfileResponse();
 
         //Verify session token.
-        if (!authenticationClient.verifyToken(editProfileRequest, editProfileRequest.getEmail())) {
+        if (!authenticationClient.verifyToken(editProfileRequest)) {
             editProfileResponse.setSuccess(false);
             editProfileResponse.setMessage("User session expired.");
             return editProfileResponse;

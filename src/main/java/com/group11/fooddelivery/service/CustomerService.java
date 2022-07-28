@@ -38,7 +38,7 @@ public class CustomerService {
         PlaceOrderResponse placeOrderResponse = new PlaceOrderResponse();
 
         //Verify session token.
-        if (!authenticationClient.verifyToken(placeOrderRequest, placeOrderRequest.getEmail())) {
+        if (!authenticationClient.verifyToken(placeOrderRequest)) {
             placeOrderResponse.setSuccess(false);
             placeOrderResponse.setMessage("User session expired.");
             return placeOrderResponse;
@@ -78,7 +78,7 @@ public class CustomerService {
         LatLongResponse latLongResponse = new LatLongResponse();
 
         //Verify session token.
-        if (!authenticationClient.verifyToken(latLongRequest, latLongRequest.getEmail())) {
+        if (!authenticationClient.verifyToken(latLongRequest)) {
             latLongResponse.setSuccess(false);
             latLongResponse.setMessage("User session expired.");
             return latLongResponse;

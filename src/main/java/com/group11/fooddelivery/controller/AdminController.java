@@ -1,45 +1,48 @@
 package com.group11.fooddelivery.controller;
 
+import com.group11.fooddelivery.model.request.*;
 import com.group11.fooddelivery.model.response.AdminResponse;
 import com.group11.fooddelivery.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class AdminController {
-     @Autowired
+    @Autowired
     AdminService adminService;
 
-    @GetMapping(value = "/getUser", produces = "application/json")
-    public ResponseEntity<AdminResponse> getUsers(){
-        AdminResponse adminResponse = adminService.getUsers();
-       return new ResponseEntity<AdminResponse>(adminResponse, HttpStatus.OK);
+    @GetMapping(value = "/getUser", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<AdminResponse> getUsers(@RequestBody GetAllUserRequest getAllUserRequest) {
+        AdminResponse adminResponse = adminService.getUsers(getAllUserRequest);
+        return new ResponseEntity<>(adminResponse, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/getAllRestaurants", produces = "application/json")
-    public ResponseEntity<AdminResponse> getRestaurants(){
-      AdminResponse adminResponse =  adminService.getAllRestaurants();
+    @GetMapping(value = "/getAllRestaurants", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<AdminResponse> getAllRestaurants(@RequestBody GetAllRestaurantsRequest getAllRestaurantsRequest) {
+        AdminResponse adminResponse = adminService.getAllRestaurants(getAllRestaurantsRequest);
+        return new ResponseEntity<>(adminResponse, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getOrders", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<AdminResponse> getOrders(@RequestBody GetOrdersRequest getOrdersRequest) {
+        AdminResponse adminResponse = adminService.getOrders(getOrdersRequest);
+        return new ResponseEntity<>(adminResponse, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/banRestaurant", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<AdminResponse> banRestaurants(@RequestBody BanRestaurantRequest banRestaurantRequest) {
+        AdminResponse adminResponse = adminService.banRestaurant(banRestaurantRequest);
+        return new ResponseEntity<>(adminResponse, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/banUser", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<AdminResponse> banUser(@RequestBody BanUserRequest banUserRequest) {
+        AdminResponse adminResponse = adminService.banUser(banUserRequest);
         return new ResponseEntity<AdminResponse>(adminResponse, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/getOrders", produces = "application/json")
-    public ResponseEntity<AdminResponse> getOrders(){
-      AdminResponse adminResponse = adminService.getOrders();
-        return new ResponseEntity<AdminResponse>(adminResponse, HttpStatus.OK);
-    }
-
-    @PostMapping(value = "/banRestaurant", produces = "application/json")
-    public ResponseEntity<AdminResponse> banRestaurants(@RequestParam long restaurantId){
-      AdminResponse adminResponse = adminService.banRestaurant(restaurantId);
-        return new ResponseEntity<AdminResponse>(adminResponse, HttpStatus.OK);
-    }
-
-    @PostMapping(value = "/banUser", produces = "application/json")
-    public ResponseEntity<AdminResponse> banUser(@RequestParam String email){
-    AdminResponse adminResponse =  adminService.banUser(email);
-     return new  ResponseEntity<AdminResponse>(adminResponse,HttpStatus.OK);
     }
 }
