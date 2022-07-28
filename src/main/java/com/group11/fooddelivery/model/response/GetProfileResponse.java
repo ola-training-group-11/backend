@@ -7,5 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GetProfileResponse extends Response{
-    private User profile;
+//    private User profile;
+    private String email;
+    private String name;
+    private String role;
 }
