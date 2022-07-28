@@ -40,15 +40,16 @@ public class CommonService {
                     loginResponse.setSuccess(false);
                     loginResponse.setMessage("User is banned.");
                 } else {
+                    String uuid = UUID.randomUUID().toString();
                     loginResponse.setSuccess(true);
                     loginResponse.setMessage("Login Successful!!");
-                    UUID uuid = UUID.randomUUID();         //Adding token to the db.
-                    presentUser.setToken(uuid.toString());
+                    loginResponse.setToken(uuid);
+                    presentUser.setToken(uuid);
                     userRepository.save(presentUser);
                 }
             } else {
                 loginResponse.setSuccess(false);
-                loginResponse.setMessage("User Name or Password is incorrect!! Please enter correct credentials!!");
+                loginResponse.setMessage("Password is incorrect!! Please enter correct credentials!!");
             }
         }
         return loginResponse;
@@ -87,7 +88,9 @@ public class CommonService {
 
         String email = getProfileRequest.getEmail();
         User user = userRepository.findByEmail(email);
-        getProfileResponse.setProfile(user);
+        getProfileResponse.setName(user.getName());
+        getProfileResponse.setEmail(user.getEmail());
+        getProfileResponse.setRole(user.getRole());
         getProfileResponse.setSuccess(true);
         getProfileResponse.setMessage("User found!");
         return getProfileResponse;
