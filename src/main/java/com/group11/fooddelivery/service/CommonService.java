@@ -87,14 +87,7 @@ public class CommonService {
 
         String email = getProfileRequest.getEmail();
         User user = userRepository.findByEmail(email);
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json = null;
-        try {
-            json = ow.writeValueAsString(user);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        getProfileResponse.setProfile(json);
+        getProfileResponse.setProfile(user);
         getProfileResponse.setSuccess(true);
         getProfileResponse.setMessage("User found!");
         return getProfileResponse;
