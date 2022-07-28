@@ -7,8 +7,10 @@ import com.group11.fooddelivery.model.Order;
 import com.group11.fooddelivery.model.OrdersByUser;
 import com.group11.fooddelivery.model.Restaurant;
 import com.group11.fooddelivery.model.request.LatLongRequest;
+import com.group11.fooddelivery.model.request.MakePaymentRequest;
 import com.group11.fooddelivery.model.request.PlaceOrderRequest;
 import com.group11.fooddelivery.model.response.LatLongResponse;
+import com.group11.fooddelivery.model.response.MakePaymentResponse;
 import com.group11.fooddelivery.model.response.PlaceOrderResponse;
 import com.group11.fooddelivery.repository.OrdersByUsersRepository;
 import com.group11.fooddelivery.repository.RestaurantRepository;
@@ -31,10 +33,6 @@ public class CustomerService {
     AuthenticationClient authenticationClient;
 
     public PlaceOrderResponse placeOrder(PlaceOrderRequest placeOrderRequest) {
-        /*
-        1. send an order Id
-        2. store data in ordersByUsers and orderDetails
-         */
         PlaceOrderResponse placeOrderResponse = new PlaceOrderResponse();
 
         //Verify session token.
@@ -46,6 +44,23 @@ public class CustomerService {
 
         Restaurant restaurant = restaurantRepository.findById(placeOrderRequest.getRestaurantId()).orElse(null);
         assert restaurant != null;
+        List<String> acceptableMethods = new ArrayList<>();
+        acceptableMethods.add(Constants.paymentStatusCod);
+        acceptableMethods.add(Constants.paymentStatusUPI);
+        acceptableMethods.add(Constants.paymentStatusCards);
+        placeOrderResponse.setAcceptableMethods(acceptableMethods);
+        placeOrderResponse.setSelectedItems(customerClient.buildSelectedItems(placeOrderRequest.getSelectedItems()));
+        placeOrderResponse.setTotalPrice(customerClient.calculateTotalPrice(placeOrderRequest.getSelectedItems()));
+        placeOrderResponse.setSuccess(true);
+        placeOrderResponse.setMessage("Order placed. Please find the summary!");
+        return placeOrderResponse;
+    }
+
+    public MakePaymentResponse makePayment(MakePaymentRequest makePaymentRequest)   {
+        MakePaymentResponse makePaymentResponse = new MakePaymentResponse();
+
+        Restaurant restaurant = restaurantRepository.findById(makePaymentRequest.getRestaurantId()).orElse(null);
+        assert restaurant != null;
 
         //Generate random orderId
         String orderId = UUID.randomUUID().toString();
@@ -53,28 +68,25 @@ public class CustomerService {
         //Populate ordersByUser table
         OrdersByUser ordersByUser = new OrdersByUser();
         ordersByUser.setOrderId(orderId);
-        ordersByUser.setEmail(placeOrderRequest.getEmail());
+        ordersByUser.setEmail(makePaymentRequest.getEmail());
         ordersByUser.setStatus(Constants.orderPlaced);
         ordersByUsersRepository.save(ordersByUser);
 
         //Populate orders_info table
         Order order = new Order();
         order.setOrderId(orderId);
-        order.setRestaurantId(placeOrderRequest.getRestaurantId());
-        customerClient.populateOrderInfo(order, placeOrderRequest.getSelectedItems());
+        order.setRestaurantId(makePaymentRequest.getRestaurantId());
+        customerClient.populateOrderInfo(order, makePaymentRequest.getSelectedItems());
 
-        placeOrderResponse.setRestaurantName(restaurant.getName());
-        placeOrderResponse.setOrderId(orderId);
-        placeOrderResponse.setSelectedItems(customerClient.buildSelectedItems(placeOrderRequest.getSelectedItems()));
-        int totalPrice = customerClient.calculateTotalPrice(placeOrderRequest.getSelectedItems());
-
-        placeOrderResponse.setTotalPrice(totalPrice);
-        placeOrderResponse.setSuccess(true);
-        placeOrderResponse.setMessage("Order placed. Please find the summary!");
-        return placeOrderResponse;
+        makePaymentResponse.setOrderId(orderId);
+        makePaymentResponse.setRestaurantName(restaurant.getName());
+        makePaymentResponse.setSelectedItems(customerClient.buildSelectedItems(makePaymentRequest.getSelectedItems()));
+        makePaymentResponse.setSuccess(true);
+        makePaymentResponse.setMessage("Payment Successful");
+        return makePaymentResponse;
     }
 
-    public LatLongResponse getRestaurant(LatLongRequest latLongRequest) {
+    public LatLongResponse getFeed(LatLongRequest latLongRequest) {
         LatLongResponse latLongResponse = new LatLongResponse();
 
         //Verify session token.
@@ -103,6 +115,5 @@ public class CustomerService {
         latLongResponse.setSuccess(true);
         latLongResponse.setMessage("Please find your nearest restaurants!");
         return latLongResponse;
-
     }
 }

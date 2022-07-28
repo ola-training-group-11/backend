@@ -1,8 +1,10 @@
 package com.group11.fooddelivery.controller;
 
 import com.group11.fooddelivery.model.request.LatLongRequest;
+import com.group11.fooddelivery.model.request.MakePaymentRequest;
 import com.group11.fooddelivery.model.request.PlaceOrderRequest;
 import com.group11.fooddelivery.model.response.LatLongResponse;
+import com.group11.fooddelivery.model.response.MakePaymentResponse;
 import com.group11.fooddelivery.model.response.PlaceOrderResponse;
 import com.group11.fooddelivery.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +26,15 @@ public class CustomerController {
         return new ResponseEntity<>(placeOrderResponse, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/getRestaurants",consumes = "application/json",produces = "application/json")
-    public ResponseEntity<LatLongResponse> getRestaurants(@RequestBody LatLongRequest latLongRequest){
-        LatLongResponse latLongResponse=customerService.getRestaurant(latLongRequest);
-        return new ResponseEntity<>(latLongResponse,HttpStatus.OK);
+    @GetMapping(value = "/getFeed", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<LatLongResponse> getRestaurants(@RequestBody LatLongRequest latLongRequest) {
+        LatLongResponse latLongResponse = customerService.getFeed(latLongRequest);
+        return new ResponseEntity<>(latLongResponse, HttpStatus.OK);
+    }
 
+    @PostMapping(value = "/makePayment", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<MakePaymentResponse> makePayment(@RequestBody MakePaymentRequest makePaymentRequest) {
+        MakePaymentResponse makePaymentResponse = customerService.makePayment(makePaymentRequest);
+        return new ResponseEntity<>(makePaymentResponse, HttpStatus.OK);
     }
 }

@@ -6,4 +6,7 @@ public class Constants {
     public static final String orderPlaced = "placed";
     public static final String orderInTransit = "in transit";
     public static final String orderDelivered = "delivered";
+    public static final String paymentStatusCod = "cod";
+    public static final String paymentStatusUPI = "upi";
+    public static final String paymentStatusCards = "cards";
 }
