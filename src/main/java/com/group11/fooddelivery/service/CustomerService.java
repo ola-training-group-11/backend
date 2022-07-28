@@ -1,5 +1,6 @@
 package com.group11.fooddelivery.service;
 
+import com.group11.fooddelivery.clients.AuthenticationClient;
 import com.group11.fooddelivery.clients.CustomerClient;
 import com.group11.fooddelivery.configure.Constants;
 import com.group11.fooddelivery.model.Order;
@@ -22,6 +23,8 @@ public class CustomerService {
     RestaurantRepository restaurantRepository;
     @Autowired
     CustomerClient customerClient;
+    @Autowired
+    AuthenticationClient authenticationClient;
 
     public PlaceOrderResponse placeOrder(PlaceOrderRequest placeOrderRequest) {
         /*
@@ -29,6 +32,14 @@ public class CustomerService {
         2. store data in ordersByUsers and orderDetails
          */
         PlaceOrderResponse placeOrderResponse = new PlaceOrderResponse();
+
+        //Verify session token.
+        if(!authenticationClient.verifyToken(placeOrderRequest, placeOrderRequest.getEmail()))  {
+            placeOrderResponse.setSuccess(false);
+            placeOrderResponse.setMessage("User session expired.");
+            return placeOrderResponse;
+        }
+
         Restaurant restaurant = restaurantRepository.findById(placeOrderRequest.getRestaurantId()).orElse(null);
         assert restaurant != null;
 

@@ -3,6 +3,7 @@ package com.group11.fooddelivery.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.group11.fooddelivery.clients.AuthenticationClient;
 import com.group11.fooddelivery.configure.Constants;
 import com.group11.fooddelivery.model.User;
 import com.group11.fooddelivery.model.request.EditProfileRequest;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 public class CommonService {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    AuthenticationClient authenticationClient;
 
     String pepper = "SomethingIsHappening";
 
@@ -33,8 +36,13 @@ public class CommonService {
         } else {
             String hashedPassword = BCrypt.hashpw(loginRequest.getPassword() + pepper, presentUser.getSalt());
             if (hashedPassword.equals(presentUser.getPassword())) {
-                loginResponse.setSuccess(true);
-                loginResponse.setMessage("Login Successful!!");
+                if (!presentUser.isActive()) {
+                    loginResponse.setSuccess(false);
+                    loginResponse.setMessage("User is banned.");
+                } else {
+                    loginResponse.setSuccess(true);
+                    loginResponse.setMessage("Login Successful!!");
+                }
             } else {
                 loginResponse.setSuccess(false);
                 loginResponse.setMessage("User Name or Password is incorrect!! Please enter correct credentials!!");
@@ -66,6 +74,14 @@ public class CommonService {
 
     public GetProfileResponse getProfile(GetProfileRequest getProfileRequest) {
         GetProfileResponse getProfileResponse = new GetProfileResponse();
+
+        //Verify session token.
+        if(!authenticationClient.verifyToken(getProfileRequest, getProfileRequest.getEmail()))  {
+            getProfileResponse.setSuccess(false);
+            getProfileResponse.setMessage("User session expired.");
+            return getProfileResponse;
+        }
+
         String email = getProfileRequest.getEmail();
         User user = userRepository.findByEmail(email);
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -83,6 +99,14 @@ public class CommonService {
 
     public EditProfileResponse editProfile(EditProfileRequest editProfileRequest) {
         EditProfileResponse editProfileResponse = new EditProfileResponse();
+
+        //Verify session token.
+        if(!authenticationClient.verifyToken(editProfileRequest, editProfileRequest.getEmail()))  {
+            editProfileResponse.setSuccess(false);
+            editProfileResponse.setMessage("User session expired.");
+            return editProfileResponse;
+        }
+
         User user = userRepository.findByEmail(editProfileRequest.getEmail());
         if (Constants.name.equals(editProfileRequest.getField())) {
             //Change name
