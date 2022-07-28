@@ -81,7 +81,7 @@ public class AdminService {
             return adminResponse;
         }
 
-        List<Order> orders = orderRepository.findAll();
+        List<Order> orders = orderRepository.findAllByRestaurantId(getOrdersRequest.getRestaurantId());
         if(orders == null){
             adminResponse.setOrders(null);
             adminResponse.setSuccess(false);
