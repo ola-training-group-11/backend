@@ -3,6 +3,7 @@ package com.group11.fooddelivery.controller;
 import com.group11.fooddelivery.model.Item;
 import com.group11.fooddelivery.model.Restaurant;
 import com.group11.fooddelivery.model.request.AddItemRequest;
+import com.group11.fooddelivery.model.request.GetItemRequest;
 import com.group11.fooddelivery.model.response.*;
 import com.group11.fooddelivery.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,12 +73,6 @@ public class ManagerController {
         }
     }
 
-    @GetMapping(value = "/getItems/{id}", produces = "application/json")
-    public ResponseEntity<GetItemResponse> get_items(@PathVariable long id) {
-        GetItemResponse getItemResponse = managerService.getAllItems(id);
-        return new ResponseEntity<>(getItemResponse, HttpStatus.OK);
-    }
-
     @PostMapping(value = "/addItem", consumes = "application/json", produces = "application/json")
     public ResponseEntity<AddItemResponse> AddItem(@RequestBody AddItemRequest addItemRequest) {
         AddItemResponse addItemResponse = managerService.addItem(addItemRequest);
@@ -88,5 +83,11 @@ public class ManagerController {
     public ResponseEntity<EditItemResponse> EditItem(@RequestBody Item item) {
         EditItemResponse editItemResponse = managerService.editItem(item);
         return new ResponseEntity<>(editItemResponse, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getItems", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<GetItemResponse> getItems(@RequestBody GetItemRequest getItemRequest) {
+        GetItemResponse getItemResponse = managerService.getAllItems(getItemRequest.getRestaurantId());
+        return new ResponseEntity<>(getItemResponse, HttpStatus.OK);
     }
 }

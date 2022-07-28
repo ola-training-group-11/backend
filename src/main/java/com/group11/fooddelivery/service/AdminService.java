@@ -25,7 +25,7 @@ public class AdminService {
     @Autowired
     AuthenticationClient authenticationClient;
 
-    public AdminResponse getUsers(GetAllUserRequest getAllUserRequest){
+    public AdminResponse getUsers(GetAllUserRequest getAllUserRequest) {
         AdminResponse adminResponse = new AdminResponse();
 
         //Verify session token.
@@ -36,11 +36,11 @@ public class AdminService {
         }
 
         List<User> users = userRepository.findAll();
-        if(users == null){
+        if (users == null) {
             adminResponse.setUsers(null);
             adminResponse.setSuccess(false);
             adminResponse.setMessage("No User Exist in DataBase!!");
-        }else {
+        } else {
             adminResponse.setUsers(users);
             adminResponse.setSuccess(true);
             adminResponse.setMessage("Users Fetched Successfully!!");
@@ -48,8 +48,8 @@ public class AdminService {
         return adminResponse;
     }
 
-    public AdminResponse getAllRestaurants(GetAllRestaurantsRequest getAllRestaurantsRequest){
-        AdminResponse adminResponse =  new AdminResponse();
+    public AdminResponse getAllRestaurants(GetAllRestaurantsRequest getAllRestaurantsRequest) {
+        AdminResponse adminResponse = new AdminResponse();
 
         //Verify session token.
         if (!authenticationClient.verifyToken(getAllRestaurantsRequest)) {
@@ -59,11 +59,11 @@ public class AdminService {
         }
 
         List<Restaurant> restaurants = restaurantRepository.findAll();
-        if(restaurants == null){
+        if (restaurants == null) {
             adminResponse.setRestaurants(null);
             adminResponse.setSuccess(false);
             adminResponse.setMessage("No Restaurants Exist in DataBase!!");
-        }else{
+        } else {
             adminResponse.setRestaurants(restaurants);
             adminResponse.setSuccess(true);
             adminResponse.setMessage("Restaurants Fetched Successfully!!");
@@ -71,8 +71,8 @@ public class AdminService {
         return adminResponse;
     }
 
-    public AdminResponse getOrders(GetOrdersRequest getOrdersRequest){
-        AdminResponse adminResponse =  new AdminResponse();
+    public AdminResponse getOrders(GetOrdersRequest getOrdersRequest) {
+        AdminResponse adminResponse = new AdminResponse();
 
         //Verify session token.
         if (!authenticationClient.verifyToken(getOrdersRequest)) {
@@ -82,20 +82,20 @@ public class AdminService {
         }
 
         List<Order> orders = orderRepository.findAll();
-        if(orders == null){
+        if (orders == null) {
             adminResponse.setOrders(null);
             adminResponse.setSuccess(false);
             adminResponse.setMessage("No Orders Exist in DataBase!!");
-        }else {
+        } else {
             adminResponse.setOrders(orders);
             adminResponse.setSuccess(true);
             adminResponse.setMessage("Orders Fetched Successfully!!");
         }
-     return adminResponse;
+        return adminResponse;
     }
 
-    public AdminResponse banRestaurant(BanRestaurantRequest banRestaurantRequest){
-        AdminResponse adminResponse =  new AdminResponse();
+    public AdminResponse banRestaurant(BanRestaurantRequest banRestaurantRequest) {
+        AdminResponse adminResponse = new AdminResponse();
 
         //Verify session token.
         if (!authenticationClient.verifyToken(banRestaurantRequest)) {
@@ -104,14 +104,14 @@ public class AdminService {
             return adminResponse;
         }
 
-        Restaurant currentRestaurant = restaurantRepository.findByrestaurantId(banRestaurantRequest.getRestaurantId());
-        if (currentRestaurant == null){
+        Restaurant currentRestaurant = restaurantRepository.findByRestaurantId(banRestaurantRequest.getRestaurantId());
+        if (currentRestaurant == null) {
             adminResponse.setSuccess(false);
             adminResponse.setMessage("Restaurant Doesn't exist!!!");
-        }else if(!currentRestaurant.isActive()){
+        } else if (!currentRestaurant.isActive()) {
             adminResponse.setSuccess(false);
             adminResponse.setMessage("Restaurant is already banned!!");
-        }else {
+        } else {
 
             restaurantRepository.delete(currentRestaurant);
             currentRestaurant.setActive(false);
@@ -123,8 +123,8 @@ public class AdminService {
         return adminResponse;
     }
 
-    public AdminResponse banUser(BanUserRequest banUserRequest){
-        AdminResponse adminResponse =  new AdminResponse();
+    public AdminResponse banUser(BanUserRequest banUserRequest) {
+        AdminResponse adminResponse = new AdminResponse();
 
         //Verify session token.
         if (!authenticationClient.verifyToken(banUserRequest)) {
@@ -134,13 +134,13 @@ public class AdminService {
         }
 
         User currentUser = userRepository.findByEmail(banUserRequest.getUserEmail());
-        if (currentUser == null){
+        if (currentUser == null) {
             adminResponse.setSuccess(false);
             adminResponse.setMessage("User Doesn't exist!!!");
-        }else if(!currentUser.isActive()){
+        } else if (!currentUser.isActive()) {
             adminResponse.setSuccess(false);
             adminResponse.setMessage("User is already banned!!");
-        }else {
+        } else {
             userRepository.delete(currentUser);
             currentUser.setActive(false);
             userRepository.save(currentUser);

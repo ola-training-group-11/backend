@@ -90,7 +90,7 @@ public class ManagerService {
     public UpdateRestaurantDetails updateRestaurantDetails(Restaurant restaurant) {
         try {
             UpdateRestaurantDetails updateRestaurantDetails = new UpdateRestaurantDetails();
-            Restaurant newRestaurant = restaurantRepository.findByrestaurantId(restaurant.getRestaurantId());
+            Restaurant newRestaurant = restaurantRepository.findByRestaurantId(restaurant.getRestaurantId());
 
             if (newRestaurant == null) {
                 updateRestaurantDetails.setSuccess(false);
