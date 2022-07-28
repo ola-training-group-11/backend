@@ -26,7 +26,6 @@ public class CommonService {
     AuthenticationClient authenticationClient;
 
     String pepper = "SomethingIsHappening";
-
     public LoginResponse authenticate(LoginRequest loginRequest) {
         User presentUser = userRepository.findByEmail(loginRequest.getEmail());
         LoginResponse loginResponse = new LoginResponse();
