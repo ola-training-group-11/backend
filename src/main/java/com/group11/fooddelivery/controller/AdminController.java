@@ -28,9 +28,9 @@ public class AdminController {
         return new ResponseEntity<>(adminResponse, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/getOrders", consumes = "application/json", produces = "application/json")
+    @GetMapping(value = "/getOrdersAdmin", consumes = "application/json", produces = "application/json")
     public ResponseEntity<AdminResponse> getOrders(@RequestBody GetOrdersRequest getOrdersRequest) {
-        AdminResponse adminResponse = adminService.getOrders(getOrdersRequest);
+        AdminResponse adminResponse = adminService.getOrdersAdmin(getOrdersRequest);
         return new ResponseEntity<>(adminResponse, HttpStatus.OK);
     }
 
@@ -43,6 +43,6 @@ public class AdminController {
     @PostMapping(value = "/banUser", consumes = "application/json", produces = "application/json")
     public ResponseEntity<AdminResponse> banUser(@RequestBody BanUserRequest banUserRequest) {
         AdminResponse adminResponse = adminService.banUser(banUserRequest);
-        return new ResponseEntity<AdminResponse>(adminResponse, HttpStatus.OK);
+        return new ResponseEntity<>(adminResponse, HttpStatus.OK);
     }
 }

@@ -4,6 +4,8 @@ import com.group11.fooddelivery.model.Item;
 import com.group11.fooddelivery.model.Restaurant;
 import com.group11.fooddelivery.model.request.AddItemRequest;
 import com.group11.fooddelivery.model.request.GetItemRequest;
+import com.group11.fooddelivery.model.request.GetOrdersRequest;
+import com.group11.fooddelivery.model.request.UpdateStatusRequest;
 import com.group11.fooddelivery.model.response.*;
 import com.group11.fooddelivery.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,41 +19,39 @@ public class ManagerController {
     @Autowired
     ManagerService managerService;
 
-    @GetMapping("/updateStatus")
-    @ResponseBody
-    public ResponseEntity<UpdateStatusManagerResponse> updateStatus(@RequestParam(required = true) String orderId, @RequestParam(required = true) String status) {
+    @GetMapping(value = "/updateStatus", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<UpdateStatusManagerResponse> updateStatus(@RequestBody UpdateStatusRequest updateStatusRequest) {
 
         try {
-            UpdateStatusManagerResponse updateStatusManagerResponse = managerService.updateStatus(orderId, status);
+            UpdateStatusManagerResponse updateStatusManagerResponse = managerService.updateStatus(updateStatusRequest);
             if (updateStatusManagerResponse.isSuccess()) {
-                return new ResponseEntity<UpdateStatusManagerResponse>(updateStatusManagerResponse, HttpStatus.OK);
+                return new ResponseEntity<>(updateStatusManagerResponse, HttpStatus.OK);
 
             } else {
-                return new ResponseEntity<UpdateStatusManagerResponse>(updateStatusManagerResponse, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(updateStatusManagerResponse, HttpStatus.BAD_REQUEST);
 
             }
         } catch (Exception e) {
             UpdateStatusManagerResponse updateStatusManagerResponse = null;
-            return new ResponseEntity<UpdateStatusManagerResponse>(updateStatusManagerResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(updateStatusManagerResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/getActiveOrders")
-    @ResponseBody
-    public ResponseEntity<GetActiveOrdersResponse> getActiveOrders(@RequestParam(required = true) Long restaurantId) {
+    @GetMapping(value = "/getOrdersManager", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<GetOrdersResponse> getOrders(@RequestBody GetOrdersRequest getOrdersRequest) {
 
         try {
-            GetActiveOrdersResponse getActiveOrdersResponse = managerService.getActiveOrders(restaurantId);
-            if (getActiveOrdersResponse.isSuccess()) {
-                return new ResponseEntity<GetActiveOrdersResponse>(getActiveOrdersResponse, HttpStatus.OK);
+            GetOrdersResponse getOrdersResponse = managerService.getOrdersManager(getOrdersRequest);
+            if (getOrdersResponse.isSuccess()) {
+                return new ResponseEntity<>(getOrdersResponse, HttpStatus.OK);
 
             } else {
-                return new ResponseEntity<GetActiveOrdersResponse>(getActiveOrdersResponse, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(getOrdersResponse, HttpStatus.BAD_REQUEST);
 
             }
         } catch (Exception e) {
-            GetActiveOrdersResponse getActiveOrdersResponse = null;
-            return new ResponseEntity<GetActiveOrdersResponse>(getActiveOrdersResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            GetOrdersResponse getOrdersResponse = null;
+            return new ResponseEntity<>(getOrdersResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -61,15 +61,15 @@ public class ManagerController {
         try {
             UpdateRestaurantDetails updateRestaurantDetails = managerService.updateRestaurantDetails(restaurant);
             if (updateRestaurantDetails.isSuccess()) {
-                return new ResponseEntity<UpdateRestaurantDetails>(updateRestaurantDetails, HttpStatus.OK);
+                return new ResponseEntity<>(updateRestaurantDetails, HttpStatus.OK);
 
             } else {
-                return new ResponseEntity<UpdateRestaurantDetails>(updateRestaurantDetails, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(updateRestaurantDetails, HttpStatus.BAD_REQUEST);
 
             }
         } catch (Exception e) {
             UpdateRestaurantDetails updateRestaurantDetails = null;
-            return new ResponseEntity<UpdateRestaurantDetails>(updateRestaurantDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(updateRestaurantDetails, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
