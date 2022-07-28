@@ -15,7 +15,6 @@ public class CustomerController {
     @Autowired
     CustomerService customerService;
 
-    //@todo WIP
     @PostMapping(value = "/placeOrder", consumes = "application/json", produces = "application/json")
     public ResponseEntity<PlaceOrderResponse> placeOrder(@RequestBody PlaceOrderRequest placeOrderRequest) {
         PlaceOrderResponse placeOrderResponse = customerService.placeOrder(placeOrderRequest);

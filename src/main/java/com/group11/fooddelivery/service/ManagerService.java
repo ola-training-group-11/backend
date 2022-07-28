@@ -65,7 +65,7 @@ public class ManagerService {
 
         try{
             GetActiveOrdersManager getActiveOrdersManager = new GetActiveOrdersManager();
-            List<Order> orders= orderRepository.findAllByrestaurantId(restaurantId);
+            List<Order> orders= orderRepository.findAllByRestaurantId(restaurantId);
 
             if(orders == null || orders.size() == 0){
                 getActiveOrdersManager.setSuccess(false);
@@ -80,7 +80,7 @@ public class ManagerService {
             return  getActiveOrdersManager;
 
         }catch (Exception e){
-            System.out.println(e);
+
             GetActiveOrdersManager getActiveOrdersManager = new GetActiveOrdersManager();
             getActiveOrdersManager.setSuccess(false);
             getActiveOrdersManager.setMessage("Something went wrong");
@@ -93,7 +93,7 @@ public class ManagerService {
 
         try{
             UpdateRestaurantDetails updateRestaurantDetails = new UpdateRestaurantDetails();
-            Restaurant newRestaurant = restaurantRepository.findByrestaurantId(restaurant.getRestaurantId());
+            Restaurant newRestaurant = restaurantRepository.findByRestaurantId(restaurant.getRestaurantId());
 
             if(restaurant == null){
                 updateRestaurantDetails.setSuccess(false);

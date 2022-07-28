@@ -18,7 +18,7 @@ public class ManagerController {
 
     @GetMapping("/updateStatus")
     @ResponseBody
-    public ResponseEntity<UpdateStatusManagerResponse> updateStatus(@RequestParam(required = true) String orderId, @RequestParam(required = true) String status){
+    public ResponseEntity<UpdateStatusManagerResponse> updateStatus(@RequestBody ){
 
         try {
             UpdateStatusManagerResponse updateStatusManagerResponse = managerService.updateStatus(orderId, status);

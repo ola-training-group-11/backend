@@ -18,6 +18,6 @@ public class Order {
     private String orderId;
     private long restaurantId;
     @Id
-    private String itemId;
-    private String quantity;
+    private long itemId;
+    private long quantity;
 }
