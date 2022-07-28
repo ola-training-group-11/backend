@@ -3,9 +3,11 @@ package com.group11.fooddelivery.controller;
 import com.group11.fooddelivery.model.request.LatLongRequest;
 import com.group11.fooddelivery.model.request.MakePaymentRequest;
 import com.group11.fooddelivery.model.request.PlaceOrderRequest;
+import com.group11.fooddelivery.model.request.TrackRequest;
 import com.group11.fooddelivery.model.response.LatLongResponse;
 import com.group11.fooddelivery.model.response.MakePaymentResponse;
 import com.group11.fooddelivery.model.response.PlaceOrderResponse;
+import com.group11.fooddelivery.model.response.TrackResponse;
 import com.group11.fooddelivery.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,5 +38,11 @@ public class CustomerController {
     public ResponseEntity<MakePaymentResponse> makePayment(@RequestBody MakePaymentRequest makePaymentRequest) {
         MakePaymentResponse makePaymentResponse = customerService.makePayment(makePaymentRequest);
         return new ResponseEntity<>(makePaymentResponse, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/trackOrder", produces = "application/json")
+    public ResponseEntity<TrackResponse> trackOrder(@RequestBody TrackRequest trackRequest) {
+        TrackResponse trackResponse = customerService.track(trackRequest);
+        return new ResponseEntity<>(trackResponse, HttpStatus.OK);
     }
 }
