@@ -13,9 +13,9 @@ import javax.persistence.Table;
 @Getter
 @Setter
 public class Order {
-    @Id
     private String orderId;
     private long restaurantId;
+    @Id
     private long itemId;
     private int quantity;
 }
