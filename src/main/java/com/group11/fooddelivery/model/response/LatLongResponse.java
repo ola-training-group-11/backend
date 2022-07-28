@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class LatLongResponse {
+public class LatLongResponse extends Response{
 
     private List<String> ListOfRestaurant;
 
