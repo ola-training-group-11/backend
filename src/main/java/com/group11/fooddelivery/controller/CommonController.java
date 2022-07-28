@@ -17,19 +17,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
+
 @Controller
 public class CommonController {
     @Autowired
     CommonService commonService;
 
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         LoginResponse loginResponse = commonService.authenticate(loginRequest);
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 
     @PostMapping(value = "/signup", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<SignUpResponse> signup(@RequestBody User user) {
+    public ResponseEntity<SignUpResponse> signup(@Valid @RequestBody User user) {
         SignUpResponse signUpResponse = commonService.register(user);
         return new ResponseEntity<>(signUpResponse, HttpStatus.OK);
     }

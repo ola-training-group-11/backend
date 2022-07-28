@@ -31,13 +31,13 @@ public class AdminController {
         return new ResponseEntity<AdminResponse>(adminResponse, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/banRestaurant", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/banRestaurant", produces = "application/json")
     public ResponseEntity<AdminResponse> banRestaurants(@RequestParam long restaurantId){
       AdminResponse adminResponse = adminService.banRestaurant(restaurantId);
         return new ResponseEntity<AdminResponse>(adminResponse, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/banUser", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/banUser", produces = "application/json")
     public ResponseEntity<AdminResponse> banUser(@RequestParam String email){
     AdminResponse adminResponse =  adminService.banUser(email);
      return new  ResponseEntity<AdminResponse>(adminResponse,HttpStatus.OK);
