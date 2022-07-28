@@ -81,8 +81,8 @@ public class AdminService {
             return adminResponse;
         }
 
-        List<Order> orders = orderRepository.findAll();
-        if (orders == null) {
+        List<Order> orders = orderRepository.findAllByRestaurantId(getOrdersRequest.getRestaurantId());
+        if(orders == null){
             adminResponse.setOrders(null);
             adminResponse.setSuccess(false);
             adminResponse.setMessage("No Orders Exist in DataBase!!");
