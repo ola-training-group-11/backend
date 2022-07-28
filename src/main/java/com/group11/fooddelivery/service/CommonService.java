@@ -9,14 +9,14 @@ import com.group11.fooddelivery.model.User;
 import com.group11.fooddelivery.model.request.EditProfileRequest;
 import com.group11.fooddelivery.model.request.GetProfileRequest;
 import com.group11.fooddelivery.model.request.LoginRequest;
-import com.group11.fooddelivery.model.response.EditProfileResponse;
-import com.group11.fooddelivery.model.response.GetProfileResponse;
-import com.group11.fooddelivery.model.response.LoginResponse;
-import com.group11.fooddelivery.model.response.SignUpResponse;
+import com.group11.fooddelivery.model.request.SignOutRequest;
+import com.group11.fooddelivery.model.response.*;
 import com.group11.fooddelivery.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class CommonService {
@@ -42,6 +42,9 @@ public class CommonService {
                 } else {
                     loginResponse.setSuccess(true);
                     loginResponse.setMessage("Login Successful!!");
+                    UUID uuid =UUID.randomUUID();         //Adding token to the db.
+                    presentUser.setToken(uuid.toString());
+                    userRepository.save(presentUser);
                 }
             } else {
                 loginResponse.setSuccess(false);
@@ -122,5 +125,22 @@ public class CommonService {
         editProfileResponse.setField(editProfileRequest.getField());
         editProfileResponse.setNewValue(editProfileRequest.getNewValue());
         return editProfileResponse;
+    }
+    public SignOutResponse logout(SignOutRequest signOutRequest){
+        User currentUser = userRepository.findByEmail(signOutRequest.getEmail());
+        SignOutResponse signOutResponse=new SignOutResponse();
+
+        if(currentUser!=null){
+            currentUser.setToken(null);
+            userRepository.save(currentUser);
+            signOutResponse.setSuccess(true);
+            signOutResponse.setMessage("Logged out successfully.");
+        }
+        else{
+            signOutResponse.setSuccess(false);
+            signOutResponse.setMessage("Something went wrong!!");
+        }
+        return signOutResponse;
+
     }
 }
