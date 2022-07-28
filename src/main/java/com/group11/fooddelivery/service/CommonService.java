@@ -88,6 +88,11 @@ public class CommonService {
 
         String email = getProfileRequest.getEmail();
         User user = userRepository.findByEmail(email);
+        if(user == null)    {
+            getProfileResponse.setSuccess(false);
+            getProfileResponse.setMessage("User not found");
+            return getProfileResponse;
+        }
         getProfileResponse.setName(user.getName());
         getProfileResponse.setEmail(user.getEmail());
         getProfileResponse.setRole(user.getRole());
