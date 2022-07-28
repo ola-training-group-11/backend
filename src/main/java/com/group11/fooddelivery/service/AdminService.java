@@ -71,7 +71,7 @@ public class AdminService {
         return adminResponse;
     }
 
-    public AdminResponse getOrders(GetOrdersRequest getOrdersRequest) {
+    public AdminResponse getOrdersAdmin(GetOrdersRequest getOrdersRequest) {
         AdminResponse adminResponse = new AdminResponse();
 
         //Verify session token.

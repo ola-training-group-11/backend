@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class GetActiveOrdersResponse extends Response {
+public class GetOrdersResponse extends Response {
     private Long restaurantId;
     private List<OrderDetails> orderDetailsList;
 }
