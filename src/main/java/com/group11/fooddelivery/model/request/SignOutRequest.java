@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SignOutRequest extends Request{
+public class SignOutRequest extends Request {
     @NonNull
     private String email;
 }

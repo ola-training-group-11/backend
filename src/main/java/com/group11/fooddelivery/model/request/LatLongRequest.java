@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class LatLongRequest extends Request{
+public class LatLongRequest extends Request {
     private double latitude;
     private double longitude;
 }
