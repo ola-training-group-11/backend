@@ -4,12 +4,13 @@ package com.group11.fooddelivery.service;
 import com.group11.fooddelivery.model.*;
 import com.group11.fooddelivery.model.request.AddItemRequest;
 import com.group11.fooddelivery.model.response.*;
+import com.group11.fooddelivery.model.submodel.ItemDetails;
+import com.group11.fooddelivery.model.submodel.OrderDetails;
 import com.group11.fooddelivery.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ManagerService {
@@ -61,28 +62,53 @@ public class ManagerService {
         }
     }
 
-    public GetActiveOrdersManager getActiveOrders(Long restaurantId) {
+    public GetActiveOrdersResponse getActiveOrders(Long restaurantId) {
 
         try {
-            GetActiveOrdersManager getActiveOrdersManager = new GetActiveOrdersManager();
+            GetActiveOrdersResponse getActiveOrdersResponse = new GetActiveOrdersResponse();
             List<Order> orders = orderRepository.findAllByRestaurantId(restaurantId);
+            System.out.println(orders);
 
             if (orders == null || orders.size() == 0) {
-                getActiveOrdersManager.setSuccess(false);
-                getActiveOrdersManager.setMessage("No active order is found");
-                return getActiveOrdersManager;
+                getActiveOrdersResponse.setSuccess(false);
+                getActiveOrdersResponse.setMessage("No active order is found");
+                return getActiveOrdersResponse;
             }
 
-            getActiveOrdersManager.setSuccess(true);
-            getActiveOrdersManager.setMessage("list of active orders");
-            getActiveOrdersManager.setList(orders);
+            Set<String> uniqueOrderIds = new LinkedHashSet<>();
+            for(Order order:orders) uniqueOrderIds.add(order.getOrderId());
+            List<OrderDetails> orderDetailsList = new ArrayList<>();
 
-            return getActiveOrdersManager;
+            for(String orderId: uniqueOrderIds) {
+                OrderDetails orderDetails = new OrderDetails();
+                orderDetails.setOrderId(orderId);
+                OrdersByUser ordersByUser = ordersByUsersRepository.findByOrderId(orderId);
+                orderDetails.setStatus(ordersByUser.getStatus());
+                List<ItemDetails> itemDetailsList = new ArrayList<>();
+                for(Order order: orders)    {
+                    if(Objects.equals(order.getOrderId(), orderId))   {
+                        ItemDetails itemDetails = new ItemDetails();
+                        Item item = itemRepository.findById(order.getItemId()).orElse(null);
+                        assert item != null;
+                        itemDetails.setName(item.getName());
+                        itemDetails.setItemId(order.getItemId());
+                        itemDetails.setQuantity(order.getQuantity());
+                        itemDetailsList.add(itemDetails);
+                    }
+                }
+                orderDetails.setItemDetailsList(itemDetailsList);
+                orderDetailsList.add(orderDetails);
+            }
+            getActiveOrdersResponse.setOrderDetailsList(orderDetailsList);
+            getActiveOrdersResponse.setRestaurantId(restaurantId);
+            getActiveOrdersResponse.setSuccess(true);
+            getActiveOrdersResponse.setMessage("Order details for the given restaurant.");
+            return getActiveOrdersResponse;
         } catch (Exception e) {
-            GetActiveOrdersManager getActiveOrdersManager = new GetActiveOrdersManager();
-            getActiveOrdersManager.setSuccess(false);
-            getActiveOrdersManager.setMessage("Something went wrong");
-            return getActiveOrdersManager;
+            GetActiveOrdersResponse getActiveOrdersResponse = new GetActiveOrdersResponse();
+            getActiveOrdersResponse.setSuccess(false);
+            getActiveOrdersResponse.setMessage("Something went wrong");
+            return getActiveOrdersResponse;
 
         }
     }

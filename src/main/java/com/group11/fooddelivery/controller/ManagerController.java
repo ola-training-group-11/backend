@@ -36,22 +36,22 @@ public class ManagerController {
         }
     }
 
-    @GetMapping("/getActiveOrdersManager")
+    @GetMapping("/getActiveOrders")
     @ResponseBody
-    public ResponseEntity<GetActiveOrdersManager> getActiveOrdersManager(@RequestParam(required = true) Long restaurantId) {
+    public ResponseEntity<GetActiveOrdersResponse> getActiveOrders(@RequestParam(required = true) Long restaurantId) {
 
         try {
-            GetActiveOrdersManager getActiveOrdersManager = managerService.getActiveOrders(restaurantId);
-            if (getActiveOrdersManager.isSuccess()) {
-                return new ResponseEntity<GetActiveOrdersManager>(getActiveOrdersManager, HttpStatus.OK);
+            GetActiveOrdersResponse getActiveOrdersResponse = managerService.getActiveOrders(restaurantId);
+            if (getActiveOrdersResponse.isSuccess()) {
+                return new ResponseEntity<GetActiveOrdersResponse>(getActiveOrdersResponse, HttpStatus.OK);
 
             } else {
-                return new ResponseEntity<GetActiveOrdersManager>(getActiveOrdersManager, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<GetActiveOrdersResponse>(getActiveOrdersResponse, HttpStatus.BAD_REQUEST);
 
             }
         } catch (Exception e) {
-            GetActiveOrdersManager getActiveOrdersManager = null;
-            return new ResponseEntity<GetActiveOrdersManager>(getActiveOrdersManager, HttpStatus.INTERNAL_SERVER_ERROR);
+            GetActiveOrdersResponse getActiveOrdersResponse = null;
+            return new ResponseEntity<GetActiveOrdersResponse>(getActiveOrdersResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

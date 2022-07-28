@@ -2,8 +2,8 @@ package com.group11.fooddelivery.clients;
 
 import com.group11.fooddelivery.model.Item;
 import com.group11.fooddelivery.model.Order;
-import com.group11.fooddelivery.model.PlaceOrderRequestItems;
-import com.group11.fooddelivery.model.PlaceOrderResponseItems;
+import com.group11.fooddelivery.model.submodel.ItemDetails;
+import com.group11.fooddelivery.model.submodel.PlaceOrderResponseItems;
 import com.group11.fooddelivery.repository.ItemRepository;
 import com.group11.fooddelivery.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +19,12 @@ public class CustomerClient {
     @Autowired
     OrderRepository orderRepository;
 
-    public List<PlaceOrderResponseItems> buildSelectedItems(List<PlaceOrderRequestItems> placeOrderRequestItemsList) {
+    public List<PlaceOrderResponseItems> buildSelectedItems(List<ItemDetails> itemDetailsList) {
         List<PlaceOrderResponseItems> placeOrderResponseItemsList = new ArrayList<>();
-        for(PlaceOrderRequestItems placeOrderRequestItems: placeOrderRequestItemsList)  {
+        for(ItemDetails itemDetails : itemDetailsList)  {
             PlaceOrderResponseItems placeOrderResponseItems = new PlaceOrderResponseItems();
-            int quantity = placeOrderRequestItems.getQuantity();
-            long itemId = placeOrderRequestItems.getItemId();
+            int quantity = itemDetails.getQuantity();
+            long itemId = itemDetails.getItemId();
 
             Item item = itemRepository.findById(itemId).orElse(null);
             assert item != null;
@@ -36,9 +36,9 @@ public class CustomerClient {
         return placeOrderResponseItemsList;
     }
 
-    public int calculateTotalPrice(List<PlaceOrderRequestItems> selectedItems) {
+    public int calculateTotalPrice(List<ItemDetails> selectedItems) {
         int totalPrice = 0;
-        for(PlaceOrderRequestItems orderedItems:selectedItems)    {
+        for(ItemDetails orderedItems:selectedItems)    {
             long itemId = orderedItems.getItemId();
             int quantity = orderedItems.getQuantity();
             Item item = itemRepository.findById(itemId).orElse(null);
@@ -51,10 +51,10 @@ public class CustomerClient {
         return totalPrice;
     }
 
-    public void populateOrderInfo(Order order, List<PlaceOrderRequestItems> selectedItems) {
-        for(PlaceOrderRequestItems placeOrderRequestItems:selectedItems)  {
-            order.setItemId(placeOrderRequestItems.getItemId());
-            order.setQuantity(placeOrderRequestItems.getQuantity());
+    public void populateOrderInfo(Order order, List<ItemDetails> selectedItems) {
+        for(ItemDetails itemDetails :selectedItems)  {
+            order.setItemId(itemDetails.getItemId());
+            order.setQuantity(itemDetails.getQuantity());
             orderRepository.save(order);
         }
     }
