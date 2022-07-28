@@ -14,9 +14,10 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Order {
-    @Id
-    private String orderId = UUID.randomUUID().toString();
+
+    private String orderId;
     private long restaurantId;
+    @Id
     private String itemId;
     private String quantity;
 }

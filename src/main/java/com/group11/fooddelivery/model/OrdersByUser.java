@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.UUID;
 
 
 @Entity
@@ -14,7 +15,7 @@ import javax.persistence.Table;
 @Setter
 public class OrdersByUser {
     @Id
-    private String orderId;
+    private String orderId = UUID.randomUUID().toString();;
     private String email;
     private String status; //Status will have values like placed, in transit or delivered.
 }
