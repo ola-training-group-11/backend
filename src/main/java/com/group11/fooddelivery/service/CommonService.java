@@ -42,7 +42,7 @@ public class CommonService {
                 } else {
                     loginResponse.setSuccess(true);
                     loginResponse.setMessage("Login Successful!!");
-                    UUID uuid =UUID.randomUUID();         //Adding token to the db.
+                    UUID uuid = UUID.randomUUID();         //Adding token to the db.
                     presentUser.setToken(uuid.toString());
                     userRepository.save(presentUser);
                 }
@@ -79,7 +79,7 @@ public class CommonService {
         GetProfileResponse getProfileResponse = new GetProfileResponse();
 
         //Verify session token.
-        if(!authenticationClient.verifyToken(getProfileRequest, getProfileRequest.getEmail()))  {
+        if (!authenticationClient.verifyToken(getProfileRequest, getProfileRequest.getEmail())) {
             getProfileResponse.setSuccess(false);
             getProfileResponse.setMessage("User session expired.");
             return getProfileResponse;
@@ -104,7 +104,7 @@ public class CommonService {
         EditProfileResponse editProfileResponse = new EditProfileResponse();
 
         //Verify session token.
-        if(!authenticationClient.verifyToken(editProfileRequest, editProfileRequest.getEmail()))  {
+        if (!authenticationClient.verifyToken(editProfileRequest, editProfileRequest.getEmail())) {
             editProfileResponse.setSuccess(false);
             editProfileResponse.setMessage("User session expired.");
             return editProfileResponse;
@@ -126,17 +126,17 @@ public class CommonService {
         editProfileResponse.setNewValue(editProfileRequest.getNewValue());
         return editProfileResponse;
     }
-    public SignOutResponse logout(SignOutRequest signOutRequest){
-        User currentUser = userRepository.findByEmail(signOutRequest.getEmail());
-        SignOutResponse signOutResponse=new SignOutResponse();
 
-        if(currentUser!=null){
+    public SignOutResponse logout(SignOutRequest signOutRequest) {
+        User currentUser = userRepository.findByEmail(signOutRequest.getEmail());
+        SignOutResponse signOutResponse = new SignOutResponse();
+
+        if (currentUser != null) {
             currentUser.setToken(null);
             userRepository.save(currentUser);
             signOutResponse.setSuccess(true);
             signOutResponse.setMessage("Logged out successfully.");
-        }
-        else{
+        } else {
             signOutResponse.setSuccess(false);
             signOutResponse.setMessage("Something went wrong!!");
         }
