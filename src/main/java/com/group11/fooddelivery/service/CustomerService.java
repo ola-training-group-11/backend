@@ -87,7 +87,7 @@ public class CustomerService {
             return latLongResponse;
         }
 
-        List<String> restaurantByName = new ArrayList<>();
+        List<Restaurant> restaurantByName = new ArrayList<>();
         List<Restaurant> restaurantList = restaurantRepository.findAll();
         double lat2 = latLongRequest.getLatitude();
         double lon2 = latLongRequest.getLongitude();
@@ -97,9 +97,7 @@ public class CustomerService {
             double lon1 = restaurant.getLongitude();
 
             if (customerClient.distance(lat1, lon1, lat2, lon2, "K") <= 5) {
-                String res = restaurant.getName();
-                restaurantByName.add(res);
-
+                restaurantByName.add(restaurant);
             }
         }
         latLongResponse.setListOfRestaurant(restaurantByName);

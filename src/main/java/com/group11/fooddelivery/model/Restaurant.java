@@ -18,4 +18,6 @@ public class Restaurant {
     private boolean isActive = true;
     private double latitude;
     private double longitude;
+    private String description;
+    private String imageUrl;
 }
