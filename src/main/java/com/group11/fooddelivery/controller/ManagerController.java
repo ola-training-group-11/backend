@@ -20,7 +20,7 @@ public class ManagerController {
     @Autowired
     ManagerService managerService;
 
-    @GetMapping(value = "/updateStatus", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/updateStatus", consumes = "application/json", produces = "application/json")
     public ResponseEntity<UpdateStatusManagerResponse> updateStatus(@RequestBody UpdateStatusRequest updateStatusRequest) {
 
         try {
@@ -38,7 +38,7 @@ public class ManagerController {
         }
     }
 
-    @GetMapping(value = "/getOrdersManager", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/getOrdersManager", consumes = "application/json", produces = "application/json")
     public ResponseEntity<GetOrdersResponse> getOrders(@RequestBody GetOrdersRequest getOrdersRequest) {
 
         try {
@@ -86,7 +86,7 @@ public class ManagerController {
         return new ResponseEntity<>(editItemResponse, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/getItems", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/getItems", consumes = "application/json", produces = "application/json")
     public ResponseEntity<GetItemResponse> getItems(@RequestBody GetItemRequest getItemRequest) {
         GetItemResponse getItemResponse = managerService.getAllItems(getItemRequest.getRestaurantId());
         return new ResponseEntity<>(getItemResponse, HttpStatus.OK);
