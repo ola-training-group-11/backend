@@ -34,7 +34,7 @@ public class CommonController {
         return new ResponseEntity<>(signUpResponse, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/getProfile", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/getProfile", consumes = "application/json", produces = "application/json")
     public ResponseEntity<GetProfileResponse> getProfile(@RequestBody GetProfileRequest getProfileRequest) {
         GetProfileResponse getProfileResponse = commonService.getProfile(getProfileRequest);
         return new ResponseEntity<>(getProfileResponse, HttpStatus.OK);

@@ -28,7 +28,7 @@ public class CustomerController {
         return new ResponseEntity<>(placeOrderResponse, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/getFeed", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/getFeed", consumes = "application/json", produces = "application/json")
     public ResponseEntity<LatLongResponse> getRestaurants(@RequestBody LatLongRequest latLongRequest) {
         LatLongResponse latLongResponse = customerService.getFeed(latLongRequest);
         return new ResponseEntity<>(latLongResponse, HttpStatus.OK);
@@ -40,7 +40,7 @@ public class CustomerController {
         return new ResponseEntity<>(makePaymentResponse, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/trackOrder", produces = "application/json")
+    @PostMapping(value = "/trackOrder", produces = "application/json")
     public ResponseEntity<TrackResponse> trackOrder(@RequestBody TrackRequest trackRequest) {
         TrackResponse trackResponse = customerService.track(trackRequest);
         return new ResponseEntity<>(trackResponse, HttpStatus.OK);
