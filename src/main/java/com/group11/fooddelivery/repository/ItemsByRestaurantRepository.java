@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface ItemsByRestaurantRepository extends JpaRepository<ItemsByRestaurant, Long>
 {
-    List<ItemsByRestaurant> findAllByItemId(long restaurant_id);
+    List<ItemsByRestaurant> findAllByItemId(long item_id);
+    List<ItemsByRestaurant>findAllByRestaurantId(long restaurant_id);
 }

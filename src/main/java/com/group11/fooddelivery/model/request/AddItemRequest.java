@@ -1,2 +1,5 @@
-package com.group11.fooddelivery.model.request;public class AddItemRequest {
+package com.group11.fooddelivery.model.request;
+
+public class AddItemRequest {
+    long id;
 }
