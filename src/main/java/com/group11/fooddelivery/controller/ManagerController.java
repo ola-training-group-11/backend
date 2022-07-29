@@ -19,37 +19,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class ManagerController
-{
+public class ManagerController {
 
     Response response = new Response();
     @Autowired
-    ItemByRestaurantService service ;
+    ItemByRestaurantService service;
     @Autowired
-    ItemByIdService   service2;
+    ItemByIdService service2;
     @Autowired
     ItemRepository itemRepository;
     @Autowired
     ItemsByRestaurantRepository itemsByRestaurantRepository;
+
     @GetMapping(value = "/getitems/{manager_id}")
-    public List<Item> placeOrder(@PathVariable long manager_id)
-    {
+    public List<Item> placeOrder(@PathVariable long manager_id) {
         List<ItemsByRestaurant> itemsByRestaurantList = new ArrayList<>();
-        itemsByRestaurantList = (ArrayList)itemsByRestaurantRepository.findAllByRestaurantId(manager_id);
+        itemsByRestaurantList = (ArrayList) itemsByRestaurantRepository.findAllByRestaurantId(manager_id);
         ArrayList<Item> full_item = new ArrayList<>();
 
-        for(ItemsByRestaurant i:itemsByRestaurantList)
-        {
+        for (ItemsByRestaurant i : itemsByRestaurantList) {
 
-            System.out.println("item is "+i.getItemId());
+            System.out.println("item is " + i.getItemId());
             full_item.add(itemRepository.getByItemId(i.getItemId()));
         }
         return full_item;
     }
 
     @PostMapping(value = "/additem/{restraunt_id}", consumes = "application/json", produces = "application/json")
-    public Response addItem(@RequestBody Item item,@PathVariable long restraunt_id)
-    {
+    public Response addItem(@RequestBody Item item, @PathVariable long restraunt_id) {
 
         itemRepository.save(item);
         response.setMessage("Good to go");
@@ -60,6 +57,6 @@ public class ManagerController
         itemsByRestaurantRepository.save(itemsByRestaurant);
         return response;
     }
-
-
 }
+
+
