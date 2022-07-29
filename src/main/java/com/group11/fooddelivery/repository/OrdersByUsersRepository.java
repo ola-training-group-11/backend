@@ -6,5 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrdersByUsersRepository extends JpaRepository<OrdersByUser, String> {
       OrdersByUser findByOrderId(String orderId);
-
 }

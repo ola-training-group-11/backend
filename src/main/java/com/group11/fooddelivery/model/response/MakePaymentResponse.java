@@ -8,8 +8,8 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PlaceOrderResponse extends Response {
+public class MakePaymentResponse extends Response {
+    private String orderId;
+    private String restaurantName;
     private List<PlaceOrderResponseItems> selectedItems;
-    private List<String> acceptableMethods;
-    private int totalPrice;
 }

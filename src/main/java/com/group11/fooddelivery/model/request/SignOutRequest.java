@@ -1,11 +1,12 @@
 package com.group11.fooddelivery.model.request;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class EditProfileRequest extends Request {
-    private String field;
-    private String newValue;
+public class SignOutRequest extends Request {
+    @NonNull
+    private String email;
 }

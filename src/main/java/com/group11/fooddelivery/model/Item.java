@@ -1,5 +1,6 @@
 package com.group11.fooddelivery.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,7 @@ public class Item {
     private long itemId;
     private String name;
     private int price;
+    @JsonProperty("isVeg")
     private boolean isVeg;
     private String description;
 }

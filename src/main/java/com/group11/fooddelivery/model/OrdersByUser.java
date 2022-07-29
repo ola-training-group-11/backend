@@ -15,7 +15,7 @@ import java.util.UUID;
 @Setter
 public class OrdersByUser {
     @Id
-    private String orderId = UUID.randomUUID().toString();;
+    private String orderId;
     private String email;
     private String status; //Status will have values like placed, in transit or delivered.
 }
