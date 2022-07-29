@@ -3,24 +3,27 @@ package com.group11.fooddelivery.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.group11.fooddelivery.clients.AuthenticationClient;
 import com.group11.fooddelivery.configure.Constants;
 import com.group11.fooddelivery.model.User;
 import com.group11.fooddelivery.model.request.EditProfileRequest;
 import com.group11.fooddelivery.model.request.GetProfileRequest;
 import com.group11.fooddelivery.model.request.LoginRequest;
-import com.group11.fooddelivery.model.response.EditProfileResponse;
-import com.group11.fooddelivery.model.response.GetProfileResponse;
-import com.group11.fooddelivery.model.response.LoginResponse;
-import com.group11.fooddelivery.model.response.SignUpResponse;
+import com.group11.fooddelivery.model.request.SignOutRequest;
+import com.group11.fooddelivery.model.response.*;
 import com.group11.fooddelivery.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class CommonService {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    AuthenticationClient authenticationClient;
 
     String pepper = "SomethingIsHappening";
 
@@ -33,8 +36,16 @@ public class CommonService {
         } else {
             String hashedPassword = BCrypt.hashpw(loginRequest.getPassword() + pepper, presentUser.getSalt());
             if (hashedPassword.equals(presentUser.getPassword())) {
-                loginResponse.setSuccess(true);
-                loginResponse.setMessage("Login Successful!!");
+                if (!presentUser.isActive()) {
+                    loginResponse.setSuccess(false);
+                    loginResponse.setMessage("User is banned.");
+                } else {
+                    loginResponse.setSuccess(true);
+                    loginResponse.setMessage("Login Successful!!");
+                    UUID uuid = UUID.randomUUID();         //Adding token to the db.
+                    presentUser.setToken(uuid.toString());
+                    userRepository.save(presentUser);
+                }
             } else {
                 loginResponse.setSuccess(false);
                 loginResponse.setMessage("User Name or Password is incorrect!! Please enter correct credentials!!");
@@ -66,16 +77,17 @@ public class CommonService {
 
     public GetProfileResponse getProfile(GetProfileRequest getProfileRequest) {
         GetProfileResponse getProfileResponse = new GetProfileResponse();
+
+        //Verify session token.
+        if (!authenticationClient.verifyToken(getProfileRequest)) {
+            getProfileResponse.setSuccess(false);
+            getProfileResponse.setMessage("User session expired.");
+            return getProfileResponse;
+        }
+
         String email = getProfileRequest.getEmail();
         User user = userRepository.findByEmail(email);
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json = null;
-        try {
-            json = ow.writeValueAsString(user);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        getProfileResponse.setProfile(json);
+        getProfileResponse.setProfile(user);
         getProfileResponse.setSuccess(true);
         getProfileResponse.setMessage("User found!");
         return getProfileResponse;
@@ -83,6 +95,14 @@ public class CommonService {
 
     public EditProfileResponse editProfile(EditProfileRequest editProfileRequest) {
         EditProfileResponse editProfileResponse = new EditProfileResponse();
+
+        //Verify session token.
+        if (!authenticationClient.verifyToken(editProfileRequest)) {
+            editProfileResponse.setSuccess(false);
+            editProfileResponse.setMessage("User session expired.");
+            return editProfileResponse;
+        }
+
         User user = userRepository.findByEmail(editProfileRequest.getEmail());
         if (Constants.name.equals(editProfileRequest.getField())) {
             //Change name
@@ -98,5 +118,22 @@ public class CommonService {
         editProfileResponse.setField(editProfileRequest.getField());
         editProfileResponse.setNewValue(editProfileRequest.getNewValue());
         return editProfileResponse;
+    }
+
+    public SignOutResponse logout(SignOutRequest signOutRequest) {
+        User currentUser = userRepository.findByEmail(signOutRequest.getEmail());
+        SignOutResponse signOutResponse = new SignOutResponse();
+
+        if (currentUser != null) {
+            currentUser.setToken(null);
+            userRepository.save(currentUser);
+            signOutResponse.setSuccess(true);
+            signOutResponse.setMessage("Logged out successfully.");
+        } else {
+            signOutResponse.setSuccess(false);
+            signOutResponse.setMessage("Something went wrong!!");
+        }
+        return signOutResponse;
+
     }
 }

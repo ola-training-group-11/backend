@@ -5,7 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class EditProfileRequest extends Request {
-    private String field;
-    private String newValue;
+public class TrackRequest extends Request{
+    private String OrderId;
 }
