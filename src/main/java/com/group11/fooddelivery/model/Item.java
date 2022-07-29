@@ -20,4 +20,5 @@ public class Item {
     @JsonProperty("isVeg")
     private boolean isVeg;
     private String description;
+    private String url;
 }
