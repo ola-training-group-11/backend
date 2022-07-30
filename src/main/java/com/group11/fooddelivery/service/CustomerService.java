@@ -40,11 +40,11 @@ public class CustomerService {
         PlaceOrderResponse placeOrderResponse = new PlaceOrderResponse();
 
         //Verify session token.
-        if (!authenticationClient.verifyToken(placeOrderRequest)) {
-            placeOrderResponse.setSuccess(false);
-            placeOrderResponse.setMessage("User session expired.");
-            return placeOrderResponse;
-        }
+//        if (!authenticationClient.verifyToken(placeOrderRequest)) {
+//            placeOrderResponse.setSuccess(false);
+//            placeOrderResponse.setMessage("User session expired.");
+//            return placeOrderResponse;
+//        }
 
         Restaurant restaurant = restaurantRepository.findById(placeOrderRequest.getRestaurantId()).orElse(null);
         assert restaurant != null;
@@ -94,11 +94,11 @@ public class CustomerService {
         LatLongResponse latLongResponse = new LatLongResponse();
 
         //Verify session token.
-        if (!authenticationClient.verifyToken(latLongRequest)) {
-            latLongResponse.setSuccess(false);
-            latLongResponse.setMessage("User session expired.");
-            return latLongResponse;
-        }
+//        if (!authenticationClient.verifyToken(latLongRequest)) {
+//            latLongResponse.setSuccess(false);
+//            latLongResponse.setMessage("User session expired.");
+//            return latLongResponse;
+//        }
 
         List<Restaurant> restaurantByName = new ArrayList<>();
         List<Restaurant> restaurantList = restaurantRepository.findAll();
@@ -136,11 +136,15 @@ public class CustomerService {
             trackResponse.setMessage("No order is placed !");
         } else if (ordersByUser.getStatus().equals(orderPlaced)) {
             trackResponse.setSuccess(true);
-            trackResponse.setMessage("Ordered is placed will be delivered soon");
-        } else if (ordersByUser.getStatus().equals(orderInTransit)) {
+            trackResponse.setMessage("Ordered is placed. We will prepare it soon.");
+        } else if (ordersByUser.getStatus().equals(orderPreparing)) {
             trackResponse.setSuccess(true);
-            trackResponse.setMessage("Ordered is on the way will be delivered soon");
-        } else if (ordersByUser.getStatus().equals(orderDelivered)) {
+            trackResponse.setMessage("The order is getting prepared!");
+        } else if(ordersByUser.getStatus().equals(orderCompleted))  {
+            trackResponse.setSuccess(true);
+            trackResponse.setMessage("The order is completed! It will be delivered soon.");
+        }
+        else if (ordersByUser.getStatus().equals(orderDelivered)) {
             trackResponse.setSuccess(true);
             trackResponse.setMessage("Ordered is Delivered");
         } else {

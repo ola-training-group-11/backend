@@ -6,12 +6,10 @@ import com.group11.fooddelivery.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@CrossOrigin
 public class AdminController {
     @Autowired
     AdminService adminService;
@@ -28,9 +26,9 @@ public class AdminController {
         return new ResponseEntity<>(adminResponse, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/getOrders", consumes = "application/json", produces = "application/json")
+    @GetMapping(value = "/getOrdersAdmin", consumes = "application/json", produces = "application/json")
     public ResponseEntity<AdminResponse> getOrders(@RequestBody GetOrdersRequest getOrdersRequest) {
-        AdminResponse adminResponse = adminService.getOrders(getOrdersRequest);
+        AdminResponse adminResponse = adminService.getOrdersAdmin(getOrdersRequest);
         return new ResponseEntity<>(adminResponse, HttpStatus.OK);
     }
 
@@ -43,6 +41,6 @@ public class AdminController {
     @PostMapping(value = "/banUser", consumes = "application/json", produces = "application/json")
     public ResponseEntity<AdminResponse> banUser(@RequestBody BanUserRequest banUserRequest) {
         AdminResponse adminResponse = adminService.banUser(banUserRequest);
-        return new ResponseEntity<AdminResponse>(adminResponse, HttpStatus.OK);
+        return new ResponseEntity<>(adminResponse, HttpStatus.OK);
     }
 }

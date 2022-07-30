@@ -1,8 +1,5 @@
 package com.group11.fooddelivery.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.group11.fooddelivery.clients.AuthenticationClient;
 import com.group11.fooddelivery.configure.Constants;
 import com.group11.fooddelivery.model.User;
@@ -40,15 +37,17 @@ public class CommonService {
                     loginResponse.setSuccess(false);
                     loginResponse.setMessage("User is banned.");
                 } else {
+                    String uuid = UUID.randomUUID().toString();
+                    System.out.println("Token for this login session = "+uuid);
                     loginResponse.setSuccess(true);
                     loginResponse.setMessage("Login Successful!!");
-                    UUID uuid = UUID.randomUUID();         //Adding token to the db.
-                    presentUser.setToken(uuid.toString());
+                    loginResponse.setToken(uuid);
+                    presentUser.setToken(uuid);
                     userRepository.save(presentUser);
                 }
             } else {
                 loginResponse.setSuccess(false);
-                loginResponse.setMessage("User Name or Password is incorrect!! Please enter correct credentials!!");
+                loginResponse.setMessage("Password is incorrect!! Please enter correct credentials!!");
             }
         }
         return loginResponse;
@@ -87,7 +86,14 @@ public class CommonService {
 
         String email = getProfileRequest.getEmail();
         User user = userRepository.findByEmail(email);
-        getProfileResponse.setProfile(user);
+        if (user == null) {
+            getProfileResponse.setSuccess(false);
+            getProfileResponse.setMessage("User not found");
+            return getProfileResponse;
+        }
+        getProfileResponse.setName(user.getName());
+        getProfileResponse.setEmail(user.getEmail());
+        getProfileResponse.setRole(user.getRole());
         getProfileResponse.setSuccess(true);
         getProfileResponse.setMessage("User found!");
         return getProfileResponse;
@@ -104,11 +110,18 @@ public class CommonService {
         }
 
         User user = userRepository.findByEmail(editProfileRequest.getEmail());
+        if (user == null) {
+            editProfileResponse.setSuccess(false);
+            editProfileResponse.setMessage("User not found");
+            return editProfileResponse;
+        }
         if (Constants.name.equals(editProfileRequest.getField())) {
             //Change name
+            editProfileResponse.setOldValue(user.getName());
             user.setName(editProfileRequest.getNewValue());
         } else if (Constants.password.equals(editProfileRequest.getField())) {
             //Change password
+            editProfileResponse.setOldValue(user.getPassword());
             user.setPassword(editProfileRequest.getNewValue());
         }
         userRepository.save(user);
@@ -121,8 +134,16 @@ public class CommonService {
     }
 
     public SignOutResponse logout(SignOutRequest signOutRequest) {
-        User currentUser = userRepository.findByEmail(signOutRequest.getEmail());
         SignOutResponse signOutResponse = new SignOutResponse();
+
+        //Verify session token.
+        if (!authenticationClient.verifyToken(signOutRequest)) {
+            signOutResponse.setSuccess(false);
+            signOutResponse.setMessage("User session expired.");
+            return signOutResponse;
+        }
+
+        User currentUser = userRepository.findByEmail(signOutRequest.getEmail());
 
         if (currentUser != null) {
             currentUser.setToken(null);

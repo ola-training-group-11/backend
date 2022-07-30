@@ -3,23 +3,24 @@ package com.group11.fooddelivery.service;
 
 import com.group11.fooddelivery.model.*;
 import com.group11.fooddelivery.model.request.AddItemRequest;
+import com.group11.fooddelivery.model.request.GetOrdersRequest;
+import com.group11.fooddelivery.model.request.UpdateStatusRequest;
 import com.group11.fooddelivery.model.response.*;
+import com.group11.fooddelivery.model.submodel.ItemDetails;
+import com.group11.fooddelivery.model.submodel.OrderDetails;
 import com.group11.fooddelivery.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ManagerService {
 
     @Autowired
     OrdersByUsersRepository ordersByUsersRepository;
-
     @Autowired
     OrderRepository orderRepository;
-
     @Autowired
     RestaurantRepository restaurantRepository;
     @Autowired
@@ -27,11 +28,11 @@ public class ManagerService {
     @Autowired
     ItemsByRestaurantRepository itemsByRestaurantRepository;
 
-    public UpdateStatusManagerResponse updateStatus(String orderId, String status) {
+    public UpdateStatusManagerResponse updateStatus(UpdateStatusRequest updateStatusRequest) {
 
         try {
             UpdateStatusManagerResponse updateStatusManagerResponse = new UpdateStatusManagerResponse();
-            OrdersByUser ordersByUsers = ordersByUsersRepository.findByOrderId(orderId);
+            OrdersByUser ordersByUsers = ordersByUsersRepository.findByOrderId(updateStatusRequest.getOrderId());
 
             if (ordersByUsers == null) {
                 updateStatusManagerResponse.setSuccess(false);
@@ -39,14 +40,8 @@ public class ManagerService {
                 return updateStatusManagerResponse;
             }
 
-            ordersByUsers.setStatus(status);
-            OrdersByUser ordersByUsers1 = ordersByUsersRepository.save(ordersByUsers);
-
-            if (ordersByUsers1 == null) {
-                updateStatusManagerResponse.setSuccess(false);
-                updateStatusManagerResponse.setMessage("status is not update, something went wrong");
-                return updateStatusManagerResponse;
-            }
+            ordersByUsers.setStatus(updateStatusRequest.getStatus());
+            ordersByUsersRepository.save(ordersByUsers);
 
             updateStatusManagerResponse.setSuccess(true);
             updateStatusManagerResponse.setMessage("status is updated");
@@ -61,28 +56,53 @@ public class ManagerService {
         }
     }
 
-    public GetActiveOrdersManager getActiveOrders(Long restaurantId) {
+    //@todo: This can be moved into common service. since admin and manager, both can use it to get orders for a given restaurant.
+    public GetOrdersResponse getOrdersManager(GetOrdersRequest getOrdersRequest) {
 
         try {
-            GetActiveOrdersManager getActiveOrdersManager = new GetActiveOrdersManager();
-            List<Order> orders = orderRepository.findAllByRestaurantId(restaurantId);
+            GetOrdersResponse getOrdersResponse = new GetOrdersResponse();
+            List<Order> orders = orderRepository.findAllByRestaurantId(getOrdersRequest.getRestaurantId());
 
             if (orders == null || orders.size() == 0) {
-                getActiveOrdersManager.setSuccess(false);
-                getActiveOrdersManager.setMessage("No active order is found");
-                return getActiveOrdersManager;
+                getOrdersResponse.setSuccess(false);
+                getOrdersResponse.setMessage("No active order is found");
+                return getOrdersResponse;
             }
 
-            getActiveOrdersManager.setSuccess(true);
-            getActiveOrdersManager.setMessage("list of active orders");
-            getActiveOrdersManager.setList(orders);
+            Set<String> uniqueOrderIds = new LinkedHashSet<>();
+            for (Order order : orders) uniqueOrderIds.add(order.getOrderId());
+            List<OrderDetails> orderDetailsList = new ArrayList<>();
 
-            return getActiveOrdersManager;
+            for (String orderId : uniqueOrderIds) {
+                OrderDetails orderDetails = new OrderDetails();
+                orderDetails.setOrderId(orderId);
+                OrdersByUser ordersByUser = ordersByUsersRepository.findByOrderId(orderId);
+                orderDetails.setStatus(ordersByUser.getStatus());
+                List<ItemDetails> itemDetailsList = new ArrayList<>();
+                for (Order order : orders) {
+                    if (Objects.equals(order.getOrderId(), orderId)) {
+                        ItemDetails itemDetails = new ItemDetails();
+                        Item item = itemRepository.findById(order.getItemId()).orElse(null);
+                        assert item != null;
+                        itemDetails.setName(item.getName());
+                        itemDetails.setItemId(order.getItemId());
+                        itemDetails.setQuantity(order.getQuantity());
+                        itemDetailsList.add(itemDetails);
+                    }
+                }
+                orderDetails.setItemDetailsList(itemDetailsList);
+                orderDetailsList.add(orderDetails);
+            }
+            getOrdersResponse.setOrderDetailsList(orderDetailsList);
+            getOrdersResponse.setRestaurantId(getOrdersRequest.getRestaurantId());
+            getOrdersResponse.setSuccess(true);
+            getOrdersResponse.setMessage("Order details for the given restaurant.");
+            return getOrdersResponse;
         } catch (Exception e) {
-            GetActiveOrdersManager getActiveOrdersManager = new GetActiveOrdersManager();
-            getActiveOrdersManager.setSuccess(false);
-            getActiveOrdersManager.setMessage("Something went wrong");
-            return getActiveOrdersManager;
+            GetOrdersResponse getOrdersResponse = new GetOrdersResponse();
+            getOrdersResponse.setSuccess(false);
+            getOrdersResponse.setMessage("Something went wrong");
+            return getOrdersResponse;
 
         }
     }
@@ -90,7 +110,7 @@ public class ManagerService {
     public UpdateRestaurantDetails updateRestaurantDetails(Restaurant restaurant) {
         try {
             UpdateRestaurantDetails updateRestaurantDetails = new UpdateRestaurantDetails();
-            Restaurant newRestaurant = restaurantRepository.findByrestaurantId(restaurant.getRestaurantId());
+            Restaurant newRestaurant = restaurantRepository.findByRestaurantId(restaurant.getRestaurantId());
 
             if (newRestaurant == null) {
                 updateRestaurantDetails.setSuccess(false);
@@ -98,11 +118,7 @@ public class ManagerService {
                 return updateRestaurantDetails;
             }
 
-            if (restaurantRepository.save(restaurant) == null) {
-                updateRestaurantDetails.setSuccess(false);
-                updateRestaurantDetails.setMessage("restaurant details not updated, something went wrong");
-                return updateRestaurantDetails;
-            }
+            restaurantRepository.save(restaurant);
 
             updateRestaurantDetails.setSuccess(true);
             updateRestaurantDetails.setMessage("restaurant details are updated");

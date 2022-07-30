@@ -1,4 +1,4 @@
-package com.group11.fooddelivery.model;
+package com.group11.fooddelivery.model.submodel;
 
 
 import lombok.Getter;

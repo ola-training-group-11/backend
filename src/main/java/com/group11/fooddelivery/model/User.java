@@ -23,6 +23,7 @@ public class User {
     private String name;
     @NotEmpty(message = "Password Should be non-empty!!")
     private String password;
+    @NotEmpty(message = "")
     private String role;
     private String salt;
     private String token;
