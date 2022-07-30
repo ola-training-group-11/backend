@@ -136,11 +136,15 @@ public class CustomerService {
             trackResponse.setMessage("No order is placed !");
         } else if (ordersByUser.getStatus().equals(orderPlaced)) {
             trackResponse.setSuccess(true);
-            trackResponse.setMessage("Ordered is placed will be delivered soon");
-        } else if (ordersByUser.getStatus().equals(orderInTransit)) {
+            trackResponse.setMessage("Ordered is placed. We will prepare it soon.");
+        } else if (ordersByUser.getStatus().equals(orderPreparing)) {
             trackResponse.setSuccess(true);
-            trackResponse.setMessage("Ordered is on the way will be delivered soon");
-        } else if (ordersByUser.getStatus().equals(orderDelivered)) {
+            trackResponse.setMessage("The order is getting prepared!");
+        } else if(ordersByUser.getStatus().equals(orderCompleted))  {
+            trackResponse.setSuccess(true);
+            trackResponse.setMessage("The order is completed! It will be delivered soon.");
+        }
+        else if (ordersByUser.getStatus().equals(orderDelivered)) {
             trackResponse.setSuccess(true);
             trackResponse.setMessage("Ordered is Delivered");
         } else {
